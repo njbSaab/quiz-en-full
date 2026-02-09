@@ -1,0 +1,138 @@
+
+ <div class="flex flex-row gap-8 items-start mt-10">
+
+  <!-- Левая часть: редактор -->
+  <div class="w-full max-w-[500px] mx-auto space-y-6 pt-[215px]">
+
+    <div class="flex items-center gap-3">
+      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" class="text-indigo-500">
+        <g fill="none" stroke="#6366f1" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+          <path stroke-dasharray="20" stroke-dashoffset="20" d="M3 21h18"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.2s" values="20;0"/></path>
+          <path fill="#6366f1" fill-opacity="0" stroke-dasharray="48" stroke-dashoffset="48" d="M7 17v-4l10 -10l4 4l-10 10h-4">
+            <animate fill="freeze" attributeName="fill-opacity" begin="1.1s" dur="0.5s" values="0;1"/>
+            <animate fill="freeze" attributeName="stroke-dashoffset" begin="0.2s" dur="0.6s" values="48;0"/>
+          </path>
+          <path stroke-dasharray="8" stroke-dashoffset="8" d="M14 6l4 4">
+            <animate fill="freeze" attributeName="stroke-dashoffset" begin="0.8s" dur="0.2s" values="8;0"/>
+          </path>
+        </g>
+      </svg>
+      <h5 class="text-2xl font-bold text-indigo-500">Редактировать шаблон письма</h5>
+    </div>
+
+    <!-- quizInfo поля -->
+    <div class="space-y-4">
+      <textarea [(ngModel)]="editableQuizInfo.firstText" (input)="onFieldChange()" type="text" placeholder="Первая строка после приветствия" class="input w-full ring ring-gray-100"></textarea>
+      <textarea [(ngModel)]="editableQuizInfo.secondText" (input)="onFieldChange()" placeholder="Вторая строка" class="textarea w-full h-24 ring ring-gray-100"></textarea>
+    </div>
+
+    <!-- resultMessages -->
+    <div class="space-y-3 bg-gray-50 rounded-xl text-center border-l-8 border-indigo-500 mt-[15px] py-2 px-2">
+        <div *ngFor="let key of resultMessageKeys" class="flex gap-2 items-center">
+        <!-- Ключ (диапазон) — редактируемый -->
+        <input 
+            *ngIf="type === 'POINTS'"
+            [(ngModel)]="resultMessageKeys[resultMessageKeys.indexOf(key)]"
+            (input)="onFieldChange()"
+            type="text"
+            placeholder="0-4"
+            class="input w-[5rem] text-center font-mono ring ring-gray-100 p-0"
+        />
+
+        <!-- Фиксированный ключ для MAJORITY -->
+        <span *ngIf="type === 'MAJORITY'" class="badge badge-primary w-20 text-center">
+            {{ key }}
+        </span>
+
+        <!-- Текст фразы -->
+        <textarea 
+            [(ngModel)]="editableResultMessages[key]" 
+            (input)="onFieldChange()"
+            type="text" 
+            placeholder="Текст результата..." 
+            class="input flex-1 ring ring-gray-100" 
+        ></textarea>
+        <!-- Кнопка удаления (только для POINTS и если > 1) -->
+        <button 
+            *ngIf="type === 'POINTS' && resultMessageKeys.length > 1"
+            (click)="removeResultMessage(key)"
+            class="btn btn-circle btn-error btn-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="white">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+            </svg>
+        </button>
+        </div>
+        <button 
+            *ngIf="type === 'POINTS'" 
+            class="btn btn-sm btn-success flex" 
+            (click)="addResultMessage()">
+            + Фразу
+        </button>
+    </div>
+
+    <div class="space-y-4 rounded-xl border-l-8 bg-blue-50 border-purple-500 mt-8 mb-[30px] px-2 py-8">
+      <textarea [(ngModel)]="editableQuizInfo.partnerBonus" (input)="onFieldChange()" type="text" placeholder="Партнёрский текст 1" class="input w-full ring-gray-100" ></textarea>
+      <textarea [(ngModel)]="editableQuizInfo.partnerBonus2" (input)="onFieldChange()" type="text" placeholder="Партнёрский текст 2" class="input w-full ring-gray-100" ></textarea>
+      <textarea [(ngModel)]="editableQuizInfo.partnerBonus3" (input)="onFieldChange()" type="text" placeholder="Партнёрский текст 3" class="input w-full ring-gray-100" ></textarea>
+        <div class="text-center mt-8">
+            <button class="inline-block bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold text-xl rounded-2xl shadow-lg hover:shadow-xl transition w-[70%] p-4">
+                <input [(ngModel)]="editableQuizInfo.btnLink" (input)="onFieldChange()" type="text" placeholder="Ссылка на кнопку" class="input w-full bg-transparent ring ring-gray-00" />
+            </button>
+        </div>
+    </div>
+
+  </div>
+
+  <!-- Правая часть: живое превью -->
+  <div class="w-full max-w-[600px] bg-white rounded-2xl shadow-2xl overflow-hidden font-sans">
+    <div class="bg-gradient-to-r from-purple-500 to-cyan-500 text-white text-center py-8">
+      <img src="https://i.ibb.co/QF0sMsFF/6.png" alt="Logo" class="h-16 mx-auto mb-3" />
+    </div>
+
+    <div class="p-8 text-gray-800">
+      <p class="text-xl font-bold text-gray-900 mb-6">
+        Привет, <span class="text-purple-600">друг</span>!<br>
+        Поздравляем с прохождением теста!
+      </p>
+
+      <div class="space-y-4 text-lg">
+        <p *ngIf="editableQuizInfo.firstText">{{ editableQuizInfo.firstText }}</p>
+        <p *ngIf="editableQuizInfo.secondText">{{ editableQuizInfo.secondText }}</p>
+      </div>
+
+      <div class="my-8 bg-gray-50 p-6 rounded-xl text-center border-l-8 border-indigo-500">
+        <div class="text-2xl font-bold text-gray-900 leading-snug">
+          {{ previewResultMessage }}
+        </div>
+        <div *ngIf="type === 'MAJORITY' && previewDisplayValue" class="mt-4 text-6xl font-bold text-purple-600">
+          #{{ previewDisplayValue }}
+        </div>
+      </div>
+
+      <p class="text-lg text-gray-600 my-8">
+        У нас ещё много интересных тестов — попробуйте другие!
+        <a href="https://votevibe.club/quvi" class="text-indigo-600 font-bold underline">Пройти другие квизы</a>
+      </p>
+
+      <div class="bg-blue-50 p-6 rounded-xl border-l-4 border-purple-500">
+        <div class="space-y-4 text-lg">
+          <p *ngIf="editableQuizInfo.partnerBonus" class="font-medium">{{ editableQuizInfo.partnerBonus }}</p>
+          <p *ngIf="editableQuizInfo.partnerBonus2">{{ editableQuizInfo.partnerBonus2 }}</p>
+          <p *ngIf="editableQuizInfo.partnerBonus3">{{ editableQuizInfo.partnerBonus3 }}</p>
+        </div>
+
+        <div class="text-center mt-8">
+          <a [href]="editableQuizInfo.btnLink || 'https://votevibe.club'" target="_blank"
+             class="inline-block px-10 py-5 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold text-xl rounded-2xl shadow-lg hover:shadow-xl transition">
+            Получить награду
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-gray-100 text-center py-6 text-sm text-gray-500">
+      <p>Спасибо за участие! По вопросам: {{supMail}}</p>
+      <p class="mt-2">© 2025 VoteVibe</p>
+    </div>
+  </div>
+</div>

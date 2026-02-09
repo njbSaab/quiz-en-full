@@ -1,0 +1,319 @@
+<!-- terms.component.html -->
+<section class="pages">
+  <div class="flex items-center gap-4">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="48"
+      height="48"
+      viewBox="0 0 24 24"
+      class="text-indigo-500"
+    >
+      <g
+        fill="none"
+        stroke="#6366f1"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+      >
+        <path stroke-dasharray="20" stroke-dashoffset="20" d="M3 21h18">
+          <animate
+            fill="freeze"
+            attributeName="stroke-dashoffset"
+            dur="0.2s"
+            values="20;0"
+          />
+        </path>
+        <path
+          fill="#6366f1"
+          fill-opacity="0"
+          stroke-dasharray="48"
+          stroke-dashoffset="48"
+          d="M7 17v-4l10 -10l4 4l-10 10h-4"
+        >
+          <animate
+            fill="freeze"
+            attributeName="fill-opacity"
+            begin="1.1s"
+            dur="0.5s"
+            values="0;1"
+          />
+          <animate
+            fill="freeze"
+            attributeName="stroke-dashoffset"
+            begin="0.2s"
+            dur="0.6s"
+            values="48;0"
+          />
+        </path>
+        <path stroke-dasharray="8" stroke-dashoffset="8" d="M14 6l4 4">
+          <animate
+            fill="freeze"
+            attributeName="stroke-dashoffset"
+            begin="0.8s"
+            dur="0.2s"
+            values="8;0"
+          />
+        </path>
+      </g>
+    </svg>
+    <h2 class="text-3xl font-bold text-indigo-600">
+      Редактировать Условия использования (Terms)
+    </h2>
+  </div>
+  <div class="flex flex-row gap-12 items-start mt-4 pb-20">
+    <!-- Левая часть: Редактор -->
+    <div class="w-full max-w-[600px] space-y-4">
+      <!-- Основной заголовок -->
+      <div class="space-y-2">
+        <label class="font-medium text-gray-700">Главный заголовок</label>
+        <input
+          [(ngModel)]="editableContent.title"
+          (input)="onFieldChange()"
+          class="input input-bordered w-full"
+          placeholder="服務條款"
+        />
+      </div>
+
+      <!-- Подзаголовок -->
+      <div class="space-y-2">
+        <label class="font-medium text-gray-700">Подзаголовок (описание)</label>
+        <textarea
+          [(ngModel)]="editableContent.subtitle"
+          (input)="onFieldChange()"
+          rows="3"
+          class="textarea textarea-bordered w-full resize-none"
+        ></textarea>
+      </div>
+
+      <!-- Email для контактов -->
+      <div class="space-y-2">
+        <label class="font-medium text-gray-700"
+          >Email для вопросов (внизу)</label
+        >
+        <input
+          [(ngModel)]="editableContent.email"
+          (input)="onFieldChange()"
+          type="email"
+          class="input input-bordered w-full"
+          placeholder="privacy@votevibe.club"
+        />
+      </div>
+
+      <!-- Список разделов -->
+      <div class="space-y-6">
+        <!-- Блок редактирования ТОЛЬКО активного раздела -->
+        <div *ngIf="editableContent.collapse.length > 0" class="mt-8">
+          <div class="title-wrapper flex justify-between items-center mb-2">
+            <h4 class="text-lg font-semibold flex items-center gap-2">
+              <span
+                class="btn btn-ghost btn-circle font-medium text-xl"
+                [class.bg-cyan-500]="[0, 3, 6, 9].includes(activeSectionIndex)"
+                [class.bg-blue-500]="[1, 4, 7, 10].includes(activeSectionIndex)"
+                [class.bg-fuchsia-500]="
+                  [2, 5, 8, 11].includes(activeSectionIndex)
+                "
+              >
+                {{ activeSectionIndex + 1 }}
+              </span>
+              Редактирование раздела:
+              <span
+                class="font-medium"
+                [class.text-cyan-500]="
+                  [0, 3, 6, 9].includes(activeSectionIndex)
+                "
+                [class.text-blue-500]="
+                  [1, 4, 7, 10].includes(activeSectionIndex)
+                "
+                [class.text-fuchsia-500]="
+                  [2, 5, 8, 11].includes(activeSectionIndex)
+                "
+              >
+                {{
+                  editableContent.collapse[activeSectionIndex].title ||
+                    '(Без заголовка)'
+                }}
+              </span>
+            </h4>
+            <div class="btn-group flex items-center">
+              <button class="btn btn-success btn-sm" (click)="addSection()">
+                + Добавить раздел
+              </button>
+              <button
+                class="btn btn-ghost btn-circle"
+                (click)="removeSection(activeSectionIndex)"
+              >
+                ❌
+              </button>
+            </div>
+          </div>
+          <div
+            class="space-y-4 p-5 border-2 rounded-3xl bg-base-100"
+            [class.border-cyan-300]="[0, 3, 6, 9].includes(activeSectionIndex)"
+            [class.border-blue-300]="[1, 4, 7, 10].includes(activeSectionIndex)"
+            [class.border-fuchsia-300]="
+              [2, 5, 8, 11].includes(activeSectionIndex)
+            "
+          >
+            <div>
+              <label class="label">
+                <span class="label-text font-medium">Заголовок раздела</span>
+              </label>
+              <input
+                [(ngModel)]="editableContent.collapse[activeSectionIndex].title"
+                (input)="onFieldChange()"
+                placeholder="Введите заголовок..."
+                class="input input-bordered w-full"
+              />
+            </div>
+
+            <div>
+              <label class="label">
+                <span class="label-text font-medium">Текст раздела</span>
+              </label>
+              <textarea
+                [(ngModel)]="editableContent.collapse[activeSectionIndex].body"
+                (input)="onFieldChange()"
+                rows="5"
+                placeholder="Введите текст раздела..."
+                class="textarea textarea-bordered w-full resize-none"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Если нет разделов -->
+        <div
+          *ngIf="editableContent.collapse.length === 0"
+          class="text-center py-12 text-gray-500 border-2 border-dashed rounded-xl"
+        >
+          Нет разделов.<br />
+          Нажмите "+ Добавить раздел", чтобы создать первый.
+        </div>
+      </div>
+      <div class="flex items-center justify-between mt-4">
+        <div class="flex flex-col items-center gap-4 w-full">
+          <button
+            class="btn btn-success btn-save"
+            (click)="saveManually()"
+            [disabled]="saving"
+          >
+            <span class="loading loading-spinner" *ngIf="saving"></span>
+            Сохранить изменения
+          </button>
+
+          <div
+            class="text-sm"
+            [ngClass]="{
+              'text-success': saveStatus === 'success',
+              'text-error': saveStatus === 'error',
+              'text-info': saveStatus === 'saving',
+            }"
+          >
+            {{ saveMessage }}
+            <span
+              *ngIf="
+                saveStatus === 'idle' && editableContent.collapse.length > 0
+              "
+            >
+              Автосохранение через 1.5с после изменения
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Правая часть: Живое превью -->
+    <div
+      class="flex-1 max-w-4xl bg-gray-900 rounded-2xl shadow-2xl overflow-hidden"
+    >
+      <section class="h-space mb-8 relative">
+        <div class="absolute inset-0 -z-10">
+          <div
+            class="absolute -top-40 left-1/2 -translate-x-1/2 h-[32rem] w-full lg:w-[32rem] rounded-full blur-3xl opacity-20"
+            style="
+              background: radial-gradient(
+                closest-side,
+                #a78bfa,
+                transparent 70%
+              );
+            "
+          ></div>
+          <div
+            class="absolute top-40 right-10 h-64 w-64 rounded-full blur-3xl opacity-25"
+            style="
+              background: radial-gradient(
+                closest-side,
+                #22d3ee,
+                transparent 70%
+              );
+            "
+          ></div>
+        </div>
+
+        <div class="container max-w-[850px] px-6 py-10 mx-auto">
+          <h2 class="text-2xl lg:text-3xl font-semibold text-center">
+            <span
+              class="bg-gradient-to-r from-fuchsia-400 via-cyan-300 to-violet-400 bg-clip-text text-transparent"
+            >
+              {{ editableContent.title || '服務條款' }}
+            </span>
+          </h2>
+
+          <p
+            class="text-md lg:text-xl text-center text-white opacity-70 w-[80%] mx-auto mt-4"
+          >
+            {{ editableContent.subtitle }}
+          </p>
+
+          <div class="mt-8 flex flex-col gap-4">
+            <div
+              *ngFor="
+                let item of editableContent.collapse;
+                let i = index;
+                let isFirst = first
+              "
+              class="collapse collapse-arrow border rounded-box"
+              [class.border-cyan-300]="[0, 3, 6, 9].includes(i)"
+              [class.border-blue-300]="[1, 4, 7, 10].includes(i)"
+              [class.border-fuchsia-300]="[2, 5, 8, 11].includes(i)"
+            >
+              <input
+                type="radio"
+                name="terms-accordion"
+                [checked]="i === activeSectionIndex"
+                (change)="setActiveSection(i)"
+              />
+
+              <div class="collapse-title text-xl font-medium text-white">
+                {{ item.title }}
+              </div>
+              <div class="collapse-content flex gap-2">
+                <span
+                  class="border ml-4"
+                  [class.border-cyan-500]="[0, 3, 6, 9].includes(i)"
+                  [class.border-blue-500]="[1, 4, 7, 10].includes(i)"
+                  [class.border-fuchsia-500]="[2, 5, 8, 11].includes(i)"
+                ></span>
+                <p class="text-gray-300">
+                  {{ item.body }}
+                  <ng-container
+                    *ngIf="i === editableContent.collapse.length - 1"
+                  >
+                    <br /><br />
+                    如有任何問題，歡迎聯繫：
+                    <a
+                      class="link link-info"
+                      [href]="'mailto:' + editableContent.email"
+                    >
+                      {{ editableContent.email }}
+                    </a>
+                  </ng-container>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>

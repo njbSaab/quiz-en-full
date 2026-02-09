@@ -1,0 +1,93 @@
+<div
+  class="quiz-play mx-w-1024"
+  *ngIf="quiz"
+  appChangeBackground
+>
+  <div class="container">
+    <h1 class="text-center text-3xl opacity-0">{{ quiz.title }}</h1>
+
+    <!-- Анимация для вопроса -->
+    <div
+      class="quiz-play-quistion flex flex-col items-center justify-center relative quiz-container pt-5"
+      [@questionFadeIn]="currentQuestionIndex"
+      *ngIf="currentQuestionIndex < questions.length; else finished"
+    >
+      <div class="timer-box">
+        <div
+          class="radial-progress quiz-play-single z-10"
+          [style.--value]="progress"
+          role="progressbar"
+          [ngClass]="{
+            'text-error': currentTime < 5,
+            'quiz-play-single4-erroe': currentTime < 5,
+            'text-primary-radial': currentTime >= 5 && currentTime < 10,
+            'quiz-play-single3': currentTime >= 5 && currentTime < 10,
+            'text-accent-radial': currentTime >= 10
+          }"
+        >
+          <span class="countdown font-mono text-3xl">
+            <span [style.--value]="currentTime"></span>
+          </span>
+        </div>
+      </div>
+
+      <div class="quistion-text-wrapper w-full mb-4">
+        <div class="quistion-text-inner w-full relative">
+          <!-- Предзагрузка всех изображений квиза -->
+          <div class="hidden preload-container">
+            <ng-container *ngFor="let question of questions">
+              <img
+                *ngIf="question.image"
+                [src]="question.image"
+                alt="preload {{question.id}}"
+              />
+            </ng-container>
+          </div>
+
+          <!-- Текущее изображение вопроса -->
+          <div class="quistion-text w-full relative min-h-[180px]">
+            <img
+              *ngIf="currentQuestionImage"
+              [src]="currentQuestionImage"
+              class="question-image w-full h-full object-cover transition-opacity duration-400"
+              alt="Question illustration"
+            />
+         <h3 class="text-center quiz-play-single-transparet-base question-text">
+          {{ questions[currentQuestionIndex].text }}
+        </h3>
+          </div>
+      </div>
+    </div>
+
+    <ul
+      class="quiz-play-answers-list quiz-container"
+      *ngIf="isAnswerVisible && currentQuestionIndex < questions.length"
+    >
+      <li
+        *ngFor="let answer of questions[currentQuestionIndex]?.answers; let i = index"
+        [@answerItem]="{ value: i, params: { delay: i * 90 } }"
+        (click)="onAnswerSelect(answer)"
+        appRandomBackground
+        class="quiz-play-answers-item quiz-play-single-transparet-base2 flex items-center justify-center cursor-pointer text-center"
+      >
+        {{ answer.text }}
+      </li>
+    </ul>
+  </div>
+</div>
+
+<ng-template #finished>
+  <app-quiz-finished
+    [quiz]="quiz"
+    (reset)="resetProgress()"
+    (getResults)="getResults()"
+    class="h-[66dvh] flex items-center justify-center"
+  ></app-quiz-finished>
+</ng-template>
+
+<ng-template #notFound>
+  <div class="loading-container text-center h-screen">
+    <span class="loading loading-ring text-blue loading-lg"></span>
+    <span class="loading loading-ring text-regular loading-md"></span>
+  </div>
+</ng-template>

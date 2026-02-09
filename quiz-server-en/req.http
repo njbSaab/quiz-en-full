@@ -1,0 +1,652 @@
+### 1. Отправить код пользователю (генерация + шифрование + отправка)
+POST https://qkr.top4winners.top/api/email/send-code
+Content-Type: application/json
+
+{
+  "site_url": "https://1xarea.com/quiz/vietget",
+  "email_user": "testuser@example.com"
+}
+
+### https://qkr.top4winners.top/api/quizzes
+
+
+### 2. Подтвердить код и отправить данные админу
+POST https://qkr.top4winners.top/api/email/verify
+Content-Type: application/json
+{
+  "site_url": "https://1xarea.com/quiz/vietget",
+  "email_user": "testuser@example.com",
+  "email_admin": "admin@1xarea.com",
+  "encrypted_code": "U2FsdGVkX1+abc123...",  // ← сюда вставь encrypted_code из ответа выше
+  "name_user": "Nguyen Van A",
+  "id_1xbet": "1x123456",
+  "id_FB": "fb.me/nguyenvana",
+  "screenshot_1": "https://example.com/s1.jpg"
+}
+
+
+PATCH https://qkr.top4winners.top/api/quizzes/3 
+  -H "Content-Type: application/json" 
+  -H "X-Secret-Word: TOPWINNER_TOP_QUIZWIZ_WORLD
+{
+  "id": 3,
+  "title": "Cung hoàng đạo × Ẩm thực đường phố Việt Nam",
+  "description": "Món ăn nào phù hợp với cung hoàng đạo của bạn?",
+  "firstPage": "Answer the questions and get a bonus.",
+  "finalPage": "",
+  "isActive": true,
+  "createdAt": "2025-10-24T07:41:48.824Z",
+  "updatedAt": "2025-11-06T12:05:31.727Z",
+  "previewImage": "https://i.ibb.co/gbrrFYKB/movie-by-emoji-2.png",
+  "rating": 5,
+  "categoryId": null,
+  "questions": [
+    {
+      "id": 82,
+      "quizId": 3,
+      "text": "🐙💰💀",
+      "image": "https://kr.devsmm.pro/images/image-1760536944582-435261358.png",
+      "order": 1,
+      "answers": [
+        {
+          "id": 293,
+          "questionId": 82,
+          "text": "Trò Chơi Con Mực",
+          "isCorrect": true,
+          "points": 1
+        },
+        {
+          "id": 294,
+          "questionId": 82,
+          "text": "Ký Sinh Trùng",
+          "isCorrect": false,
+          "points": 0
+        },
+        {
+          "id": 295,
+          "questionId": 82,
+          "text": "Vua Lợn",
+          "isCorrect": false,
+          "points": 0
+        },
+        {
+          "id": 296,
+          "questionId": 82,
+          "text": "Chuyến Tàu Sinh Tử",
+          "isCorrect": false,
+          "points": 0
+        }
+      ]
+    },
+    {
+      "id": 83,
+      "quizId": 3,
+      "text": "🚂🧟‍♂️🇰🇷",
+      "image": "https://kr.devsmm.pro/images/image-1756892226857-103196057.png",
+      "order": 2,
+      "answers": [
+        {
+          "id": 297,
+          "questionId": 83,
+          "text": "Chuyến Tàu Sinh Tử",
+          "isCorrect": true,
+          "points": 1
+        },
+        {
+          "id": 298,
+          "questionId": 83,
+          "text": "Vòng Tròn Ám Ảnh",
+          "isCorrect": false,
+          "points": 0
+        },
+        {
+          "id": 299,
+          "questionId": 83,
+          "text": "Vua Thây Ma",
+          "isCorrect": false,
+          "points": 0
+        },
+        {
+          "id": 300,
+          "questionId": 83,
+          "text": "Godzilla",
+          "isCorrect": false,
+          "points": 0
+        }
+      ]
+    },
+    {
+      "id": 84,
+      "quizId": 3,
+      "text": "🏠💰🧹",
+      "image": "https://qkr.top4winners.top/images/image-1761646040599-730715787.jpeg",
+      "order": 3,
+      "answers": [
+        {
+          "id": 301,
+          "questionId": 84,
+          "text": "Ký Sinh Trùng",
+          "isCorrect": true,
+          "points": 1
+        },
+        {
+          "id": 302,
+          "questionId": 84,
+          "text": "Mẹ",
+          "isCorrect": false,
+          "points": 0
+        },
+        {
+          "id": 303,
+          "questionId": 84,
+          "text": "Đứa Con Của Thời Tiết",
+          "isCorrect": false,
+          "points": 0
+        },
+        {
+          "id": 304,
+          "questionId": 84,
+          "text": "Quyết Tâm Chia Tay",
+          "isCorrect": false,
+          "points": 0
+        }
+      ]
+    },
+    {
+      "id": 85,
+      "quizId": 3,
+      "text": "🌌💫💑",
+      "image": "https://qkr.top4winners.top/images/image-1761646040599-730715787.jpeg",
+      "order": 4,
+      "answers": [
+        {
+          "id": 305,
+          "questionId": 85,
+          "text": "Tên Cậu Là Gì? (Your Name)",
+          "isCorrect": true,
+          "points": 1
+        },
+        {
+          "id": 306,
+          "questionId": 85,
+          "text": "Đứa Con Của Thời Tiết",
+          "isCorrect": false,
+          "points": 0
+        },
+        {
+          "id": 307,
+          "questionId": 85,
+          "text": "Avatar",
+          "isCorrect": false,
+          "points": 0
+        },
+        {
+          "id": 308,
+          "questionId": 85,
+          "text": "5 Centimet Trên Giây",
+          "isCorrect": false,
+          "points": 0
+        }
+      ]
+    },
+    {
+      "id": 86,
+      "quizId": 3,
+      "text": "🌧️👧☀️",
+      "image": "https://qkr.top4winners.top/images/image-1761646040599-730715787.jpeg",
+      "order": 5,
+      "answers": [
+        {
+          "id": 309,
+          "questionId": 86,
+          "text": "Đứa Con Của Thời Tiết",
+          "isCorrect": true,
+          "points": 1
+        },
+        {
+          "id": 310,
+          "questionId": 86,
+          "text": "Vùng Đất Linh Hồn",
+          "isCorrect": false,
+          "points": 0
+        },
+        {
+          "id": 311,
+          "questionId": 86,
+          "text": "Lâu Đài Bay Của Howl",
+          "isCorrect": false,
+          "points": 0
+        },
+        {
+          "id": 312,
+          "questionId": 86,
+          "text": "Moana",
+          "isCorrect": false,
+          "points": 0
+        }
+      ]
+    },
+    {
+      "id": 87,
+      "quizId": 3,
+      "text": "🧊🚢💔",
+      "image": "https://qkr.top4winners.top/images/image-1761646040599-730715787.jpeg",
+      "order": 6,
+      "answers": [
+        {
+          "id": 313,
+          "questionId": 87,
+          "text": "Titanic",
+          "isCorrect": true,
+          "points": 1
+        },
+        {
+          "id": 314,
+          "questionId": 87,
+          "text": "Avatar",
+          "isCorrect": false,
+          "points": 0
+        },
+        {
+          "id": 315,
+          "questionId": 87,
+          "text": "Thế Giới Nước",
+          "isCorrect": false,
+          "points": 0
+        },
+        {
+          "id": 316,
+          "questionId": 87,
+          "text": "Biển Trong Ta",
+          "isCorrect": false,
+          "points": 0
+        }
+      ]
+    },
+    {
+      "id": 88,
+      "quizId": 3,
+      "text": "💙👽🌌",
+      "image": "https://qkr.top4winners.top/images/image-1761646040599-730715787.jpeg",
+      "order": 7,
+      "answers": [
+        {
+          "id": 317,
+          "questionId": 88,
+          "text": "Avatar",
+          "isCorrect": true,
+          "points": 1
+        },
+        {
+          "id": 318,
+          "questionId": 88,
+          "text": "Vệ Binh Dải Ngân Hà",
+          "isCorrect": false,
+          "points": 0
+        },
+        {
+          "id": 319,
+          "questionId": 88,
+          "text": "Quái Vật Không Gian",
+          "isCorrect": false,
+          "points": 0
+        },
+        {
+          "id": 320,
+          "questionId": 88,
+          "text": "E.T.",
+          "isCorrect": false,
+          "points": 0
+        }
+      ]
+    },
+    {
+      "id": 89,
+      "quizId": 3,
+      "text": "🦸‍♂️🦸‍♀️💥🌍",
+      "image": "https://qkr.top4winners.top/images/image-1761646040599-730715787.jpeg",
+      "order": 8,
+      "answers": [
+        {
+          "id": 321,
+          "questionId": 89,
+          "text": "Biệt Đội Báo Thù: Hồi Kết",
+          "isCorrect": true,
+          "points": 1
+        },
+        {
+          "id": 322,
+          "questionId": 89,
+          "text": "Người Nhện",
+          "isCorrect": false,
+          "points": 0
+        },
+        {
+          "id": 323,
+          "questionId": 89,
+          "text": "Người Sắt",
+          "isCorrect": false,
+          "points": 0
+        },
+        {
+          "id": 324,
+          "questionId": 89,
+          "text": "Thor: Tận Thế Ragnarok",
+          "isCorrect": false,
+          "points": 0
+        }
+      ]
+    }
+  ],
+  "category": null
+}'
+  "title": "🎯 Cung hoàng đạo × Ẩm thực đường phố Việt Nam",
+  "description": "Món ăn nào phù hợp với cung hoàng đạo của bạn?",
+  "firstPage": "Answer the questions and get a bonus.",
+  "finalPage": "",
+  "isActive": true,
+  "createdAt": "2025-10-24T07:41:48.824Z",
+  "updatedAt": "2025-11-06T12:05:31.727Z",
+  "previewImage": "https://i.ibb.co/gbrrFYKB/movie-by-emoji-2.png",
+  "rating": 5,
+  "categoryId": null,
+  "questions": [
+    {
+      "id": 82,
+      "quizId": 3,
+      "text": "🐙💰💀",
+      "image": "https://kr.devsmm.pro/images/image-1760536944582-435261358.png",
+      "order": 1,
+      "answers": [
+        {
+          "id": 293,
+          "questionId": 82,
+          "text": "Trò Chơi Con Mực",
+          "isCorrect": true,
+          "points": 1
+        },
+        {
+          "id": 294,
+          "questionId": 82,
+          "text": "Ký Sinh Trùng",
+          "isCorrect": false,
+          "points": 0
+        },
+        {
+          "id": 295,
+          "questionId": 82,
+          "text": "Vua Lợn",
+          "isCorrect": false,
+          "points": 0
+        },
+        {
+          "id": 296,
+          "questionId": 82,
+          "text": "Chuyến Tàu Sinh Tử",
+          "isCorrect": false,
+          "points": 0
+        }
+      ]
+    },
+    {
+      "id": 83,
+      "quizId": 3,
+      "text": "🚂🧟‍♂️🇰🇷",
+      "image": "https://kr.devsmm.pro/images/image-1756892226857-103196057.png",
+      "order": 2,
+      "answers": [
+        {
+          "id": 297,
+          "questionId": 83,
+          "text": "Chuyến Tàu Sinh Tử",
+          "isCorrect": true,
+          "points": 1
+        },
+        {
+          "id": 298,
+          "questionId": 83,
+          "text": "Vòng Tròn Ám Ảnh",
+          "isCorrect": false,
+          "points": 0
+        },
+        {
+          "id": 299,
+          "questionId": 83,
+          "text": "Vua Thây Ma",
+          "isCorrect": false,
+          "points": 0
+        },
+        {
+          "id": 300,
+          "questionId": 83,
+          "text": "Godzilla",
+          "isCorrect": false,
+          "points": 0
+        }
+      ]
+    },
+    {
+      "id": 84,
+      "quizId": 3,
+      "text": "🏠💰🧹",
+      "image": "https://qkr.top4winners.top/images/image-1761646040599-730715787.jpeg",
+      "order": 3,
+      "answers": [
+        {
+          "id": 301,
+          "questionId": 84,
+          "text": "Ký Sinh Trùng",
+          "isCorrect": true,
+          "points": 1
+        },
+        {
+          "id": 302,
+          "questionId": 84,
+          "text": "Mẹ",
+          "isCorrect": false,
+          "points": 0
+        },
+        {
+          "id": 303,
+          "questionId": 84,
+          "text": "Đứa Con Của Thời Tiết",
+          "isCorrect": false,
+          "points": 0
+        },
+        {
+          "id": 304,
+          "questionId": 84,
+          "text": "Quyết Tâm Chia Tay",
+          "isCorrect": false,
+          "points": 0
+        }
+      ]
+    },
+    {
+      "id": 85,
+      "quizId": 3,
+      "text": "🌌💫💑",
+      "image": "https://qkr.top4winners.top/images/image-1761646040599-730715787.jpeg",
+      "order": 4,
+      "answers": [
+        {
+          "id": 305,
+          "questionId": 85,
+          "text": "Tên Cậu Là Gì? (Your Name)",
+          "isCorrect": true,
+          "points": 1
+        },
+        {
+          "id": 306,
+          "questionId": 85,
+          "text": "Đứa Con Của Thời Tiết",
+          "isCorrect": false,
+          "points": 0
+        },
+        {
+          "id": 307,
+          "questionId": 85,
+          "text": "Avatar",
+          "isCorrect": false,
+          "points": 0
+        },
+        {
+          "id": 308,
+          "questionId": 85,
+          "text": "5 Centimet Trên Giây",
+          "isCorrect": false,
+          "points": 0
+        }
+      ]
+    },
+    {
+      "id": 86,
+      "quizId": 3,
+      "text": "🌧️👧☀️",
+      "image": "https://qkr.top4winners.top/images/image-1761646040599-730715787.jpeg",
+      "order": 5,
+      "answers": [
+        {
+          "id": 309,
+          "questionId": 86,
+          "text": "Đứa Con Của Thời Tiết",
+          "isCorrect": true,
+          "points": 1
+        },
+        {
+          "id": 310,
+          "questionId": 86,
+          "text": "Vùng Đất Linh Hồn",
+          "isCorrect": false,
+          "points": 0
+        },
+        {
+          "id": 311,
+          "questionId": 86,
+          "text": "Lâu Đài Bay Của Howl",
+          "isCorrect": false,
+          "points": 0
+        },
+        {
+          "id": 312,
+          "questionId": 86,
+          "text": "Moana",
+          "isCorrect": false,
+          "points": 0
+        }
+      ]
+    },
+    {
+      "id": 87,
+      "quizId": 3,
+      "text": "🧊🚢💔",
+      "image": "https://qkr.top4winners.top/images/image-1761646040599-730715787.jpeg",
+      "order": 6,
+      "answers": [
+        {
+          "id": 313,
+          "questionId": 87,
+          "text": "Titanic",
+          "isCorrect": true,
+          "points": 1
+        },
+        {
+          "id": 314,
+          "questionId": 87,
+          "text": "Avatar",
+          "isCorrect": false,
+          "points": 0
+        },
+        {
+          "id": 315,
+          "questionId": 87,
+          "text": "Thế Giới Nước",
+          "isCorrect": false,
+          "points": 0
+        },
+        {
+          "id": 316,
+          "questionId": 87,
+          "text": "Biển Trong Ta",
+          "isCorrect": false,
+          "points": 0
+        }
+      ]
+    },
+    {
+      "id": 88,
+      "quizId": 3,
+      "text": "💙👽🌌",
+      "image": "https://qkr.top4winners.top/images/image-1761646040599-730715787.jpeg",
+      "order": 7,
+      "answers": [
+        {
+          "id": 317,
+          "questionId": 88,
+          "text": "Avatar",
+          "isCorrect": true,
+          "points": 1
+        },
+        {
+          "id": 318,
+          "questionId": 88,
+          "text": "Vệ Binh Dải Ngân Hà",
+          "isCorrect": false,
+          "points": 0
+        },
+        {
+          "id": 319,
+          "questionId": 88,
+          "text": "Quái Vật Không Gian",
+          "isCorrect": false,
+          "points": 0
+        },
+        {
+          "id": 320,
+          "questionId": 88,
+          "text": "E.T.",
+          "isCorrect": false,
+          "points": 0
+        }
+      ]
+    },
+    {
+      "id": 89,
+      "quizId": 3,
+      "text": "🦸‍♂️🦸‍♀️💥🌍",
+      "image": "https://qkr.top4winners.top/images/image-1761646040599-730715787.jpeg",
+      "order": 8,
+      "answers": [
+        {
+          "id": 321,
+          "questionId": 89,
+          "text": "Biệt Đội Báo Thù: Hồi Kết",
+          "isCorrect": true,
+          "points": 1
+        },
+        {
+          "id": 322,
+          "questionId": 89,
+          "text": "Người Nhện",
+          "isCorrect": false,
+          "points": 0
+        },
+        {
+          "id": 323,
+          "questionId": 89,
+          "text": "Người Sắt",
+          "isCorrect": false,
+          "points": 0
+        },
+        {
+          "id": 324,
+          "questionId": 89,
+          "text": "Thor: Tận Thế Ragnarok",
+          "isCorrect": false,
+          "points": 0
+        }
+      ]
+    }
+  ],
+  "category": null
+}

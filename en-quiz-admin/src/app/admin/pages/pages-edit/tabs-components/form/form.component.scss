@@ -1,0 +1,46 @@
+.form {
+  border-radius: 20px;
+  max-width: 400px;
+  margin: 0 auto;
+}
+.form.bg-base-100{
+  background-color: transparent !important;
+  background: linear-gradient(80deg, #000000cd, #0000000f);
+  backdrop-filter: blur(10px);
+}
+.form-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 35px;
+  padding: 40px;
+}
+.btn-primary.btn-form {
+  background-color: #077bd3 !important;
+  outline-color: #077bd3 !important;
+  border-color: #077bd3 !important;
+  width: 100%;
+  border-radius: 0 0 20px 20px !important;
+  height: 55px;
+  font-size: 15px;
+  cursor: pointer;
+}
+.form-wrapper .input svg {
+  width: 20px;
+  height: 20px;
+}
+.form-wrapper .input {
+  background-color: #282a36;
+}
+.form-wrapper .input-bordered {
+  border-color: gray;
+}
+.input small {
+  bottom: -25px;
+  position: absolute;
+}
+.input small.text-success {
+  bottom: -50px;
+}
+.input svg {
+  color: azure;
+}

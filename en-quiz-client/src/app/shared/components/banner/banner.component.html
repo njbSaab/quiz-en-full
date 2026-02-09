@@ -1,0 +1,60 @@
+<section class="overflow-hidden h-space banner"
+[style.--custom-bg]="page?.content?.['backgroundImage']">
+  <div class="absolute left-0 top-0 w-full h-full" *ngIf="page?.content?.['backgroundImage']">
+    <img
+         [src]="page?.content?.['backgroundImage']" class="h-full w-full object-cover" alt="{{page?.content?.['banner']?.title}}">
+  </div>
+  <div class="absolute inset-0 -z-10">
+    <div
+      class="absolute -top-40 left-1/2 -translate-x-1/2 h-[32rem] w-[32rem] rounded-full blur-3xl opacity-20"
+      style="
+        background: radial-gradient(closest-side, #a78bfa, transparent 70%);
+      "
+    ></div>
+    <div
+      class="absolute top-40 right-10 h-64 w-64 rounded-full blur-3xl opacity-25"
+      style="
+        background: radial-gradient(closest-side, #22d3ee, transparent 70%);
+      "
+    ></div>
+  </div>
+
+  <div class="mx-auto mx-w-1024 px-4 sm:px-6 lg:px-8 pb-10 relative z-10">
+    <div class="max-w-[800px] mx-auto">
+      <h1
+        data-i18n="hero.title"
+        class="text-3xl sm:text-5xl font-extrabold leading-tight mx-auto text-center"
+      >
+       {{ page?.content?.['banner']?.title || 'Play First, Deal with the Rest Later...！' }}
+      </h1>
+      <p
+        data-i18n="hero.subtitle"
+        class="mt-4 sm:mt-6 text-slate-300 text-base lg:text-[1rem] max-w-2xl mx-auto text-center"
+      >
+      {{ page?.content?.['banner']?.subtitle || ' 30-second quiz — funny, surprising, even better with friends. Pick a theme and start right now!' }}
+     
+      </p>
+
+      <div
+        class="mt-6 sm:mt-8 flex flex-col sm:flex-row gap-3 mx-auto justify-center"
+      >
+        <a
+          [routerLink]="['/quiz', '11']"
+          class="inline-flex items-center justify-center rounded-2xl px-5 py-3 text-sm sm:text-base font-semibold bg-gradient-to-r from-fuchsia-500 to-cyan-400 text-slate-950 shadow-lg shadow-fuchsia-500/20 hover:opacity-95 transition"
+          data-i18n="hero.cta_primary"
+          aria-label="Start quiz"
+          > {{ page?.content?.['banner']?.playBtn?.text || 'Start now' }}
+        </a>
+        <a
+          [routerLink]="['/']"
+          (click)="onCloseClick()"
+          class="inline-flex items-center justify-center rounded-2xl px-5 py-3 text-sm sm:text-base font-semibold bg-white/5 border border-white/10 hover:bg-white/10 transition"
+          data-i18n="hero.cta_secondary"
+          aria-label="See featured quizzes"
+        >
+          {{ page?.content?.['banner']?.listQsBtn?.text || 'All Quizzes' }}
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

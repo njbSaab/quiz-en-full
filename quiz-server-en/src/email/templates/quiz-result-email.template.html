@@ -1,0 +1,170 @@
+<!-- src/email/templates/quiz-result-email.template.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quiz Results</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f9;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    .container {
+      max-width: 600px;
+      margin: 20px auto;
+      background-color: #ffffff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px 20px;
+      text-align: center;
+    }
+    .header img {
+      height: 60px;
+      margin-bottom: 15px;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 600;
+    }
+    .content {
+      padding: 30px 25px;
+    }
+    .greeting {
+      font-size: 18px;
+      margin-bottom: 20px;
+      color: #2c3e50;
+    }
+    .quiz-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #2c3e50;
+      margin: 25px 0 10px;
+    }
+    .score-box {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      margin: 20px 0;
+      border-left: 5px solid #667eea;
+    }
+    .score {
+      font-size: 32px;
+      font-weight: 700;
+      color: #667eea;
+      margin: 8px 0;
+    }
+    .progress-container {
+      background-color: #e9ecef;
+      border-radius: 8px;
+      height: 12px;
+      margin: 15px 0;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #4CAF50, #8BC34A);
+      border-radius: 8px;
+      width: 0%;
+      transition: width 1.2s ease;
+    }
+    .answers {
+      margin-top: 30px;
+    }
+    .answer-item {
+      display: flex;
+      align-items: flex-start;
+      padding: 12px 0;
+      border-bottom: 1px solid #eee;
+    }
+    .answer-item:last-child {
+      border-bottom: none;
+    }
+    .icon {
+      margin-right: 12px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .correct { color: #4CAF50; }
+    .incorrect { color: #f44336; }
+    .question-text {
+      font-weight: 600;
+      color: #2c3e50;
+    }
+    .answer-text {
+      margin-top: 4px;
+      color: #555;
+      font-size: 14px;
+    }
+    .footer {
+      background-color: #f8f9fa;
+      padding: 20px;
+      text-align: center;
+      font-size: 14px;
+      color: #777;
+    }
+    .footer a {
+      color: #667eea;
+      text-decoration: none;
+    }
+    @media (max-width: 480px) {
+      .container { margin: 10px; }
+      .header { padding: 20px 15px; }
+      .content { padding: 20px 15px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <img src="https://via.placeholder.com/150x60/667eea/ffffff?text=LOGO" alt="Logo" />
+      <h1>Congratulations!</h1>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+      <p class="greeting">You have successfully completed the quiz!</p>
+
+      <div class="quiz-title">{{quizTitle}}</div>
+
+      <div class="score-box">
+        <div>Your Score</div>
+        <div class="score">{{score}}</div>
+        <div>Correct answers: {{correct}} / {{total}}</div>
+        
+        <div><strong>{{progress}}% accuracy</strong></div>
+      </div>
+
+      <div class="answers">
+        <h3 style="margin-top: 0; color: #2c3e50;">Answer Details:</h3>
+        {{answers}}
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p>Thank you for participating! If you have any questions, please contact <a href="mailto:support@example.com">support@example.com</a>.</p>
+      <p>© {{year}} QuizWiz. All rights reserved.</p>
+    </div>
+  </div>
+
+  <script>
+    // Progress bar animation
+    setTimeout(() => {
+      const bar = document.querySelector('.progress-bar');
+      if (bar) bar.style.width = bar.style.width;
+    }, 300);
+  </script>
+</body>
+</html>

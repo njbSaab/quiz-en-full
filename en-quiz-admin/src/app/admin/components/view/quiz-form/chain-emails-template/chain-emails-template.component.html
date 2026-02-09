@@ -1,0 +1,272 @@
+<!-- chain-emails-template.component.html -->
+<div class="email-template-editor">
+  <!-- Заголовок с кнопкой -->
+  <div class="flex justify-between items-center mb-6">
+    <div class="flex items-center gap-3">
+      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24">
+        <g fill="none" stroke="#f97316" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+          <path stroke-dasharray="20" stroke-dashoffset="20" d="M3 21h18"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.2s" values="20;0"/></path>
+          <path fill="#f97316" fill-opacity="0" stroke-dasharray="48" stroke-dashoffset="48" d="M7 17v-4l10 -10l4 4l-10 10h-4">
+            <animate fill="freeze" attributeName="fill-opacity" begin="1.1s" dur="0.5s" values="0;1"/>
+            <animate fill="freeze" attributeName="stroke-dashoffset" begin="0.2s" dur="0.6s" values="48;0"/>
+          </path>
+        </g>
+      </svg>
+      <h3 class="text-2xl font-bold text-orange-500">Шаблоны цепочки Follow-up писем</h3>
+    </div>
+    <button 
+      class="btn btn-success btn-sm"
+      (click)="addNewTemplate()">
+      + Добавить письмо
+    </button>
+  </div>
+
+  <!-- Сообщения -->
+  <div *ngIf="successMessage" class="alert alert-success mb-4">
+    {{ successMessage }}
+    <button class="btn btn-sm btn-ghost" (click)="successMessage = null">×</button>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-error mb-4">
+    {{ errorMessage }}
+    <button class="btn btn-sm btn-ghost" (click)="errorMessage = null">×</button>
+  </div>
+
+  <!-- Лоадер -->
+  <div *ngIf="isLoading" class="flex justify-center py-8">
+    <span class="loading loading-spinner loading-lg text-orange-500"></span>
+  </div>
+
+  <!-- Список шаблонов (табы) -->
+  <div *ngIf="templates.length > 0" class="tabs tabs-boxed bg-base-200 mb-6 flex-wrap">
+    <a 
+      *ngFor="let template of templates"
+      class="tab"
+      [class.tab-active]="selectedTemplate?.id === template.id"
+      (click)="selectTemplate(template)">
+      Шаг {{ template.sequenceId }}.{{ template.step }} ({{ template.delayHours }}ч)
+    </a>
+  </div>
+
+    
+<div *ngIf="selectedTemplate"  class="flex flex-row gap-8 items-start mt-10">
+
+  <!-- ==================== ЛЕВАЯ ЧАСТЬ — РЕДАКТОР ==================== -->
+  <div class="w-full max-w-[520px] space-y-7 pt-4">
+
+    <!-- Заголовок редактора -->
+    <div class="flex items-center gap-4">
+      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" class="text-indigo-500">
+        <g fill="none" stroke="#6366f1" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+          <path stroke-dasharray="20" stroke-dashoffset="20" d="M3 21h18"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.2s" values="20;0"/></path>
+          <path fill="#6366f1" fill-opacity="0" stroke-dasharray="48" stroke-dashoffset="48" d="M7 17v-4l10 -10l4 4l-10 10h-4">
+            <animate fill="freeze" attributeName="fill-opacity" begin="1.1s" dur="0.5s" values="0;1"/>
+            <animate fill="freeze" attributeName="stroke-dashoffset" begin="0.2s" dur="0.6s" values="48;0"/>
+          </path>
+          <path stroke-dasharray="8" stroke-dashoffset="8" d="M14 6l4 4">
+            <animate fill="freeze" attributeName="stroke-dashoffset" begin="0.8s" dur="0.2s" values="8;0"/>
+          </path>
+        </g>
+      </svg>
+      <h5 class="text-2xl font-bold text-indigo-600">Редактировать follow-up письмо</h5>
+    </div>
+
+    <!-- Тема письма -->
+    <div class="space-y-2">
+      <label class="block text-sm font-medium text-gray-700">
+        Тема письма <span class="text-xs text-gray-500">(можно использовать user_name)</span>
+      </label>
+      <input 
+        [(ngModel)]="selectedTemplate.subject" 
+        (ngModelChange)="onContentChange()"
+        type="text" 
+        placeholder="Xin chào! It looks like you forgot something..."
+        class="input input-bordered w-full focus:ring-2 focus:ring-indigo-400" />
+    </div>
+
+<!-- ==================== ОСНОВНЫЕ ТЕКСТОВЫЕ БЛОКИ ==================== -->
+<div class="space-y-6">
+
+  <!-- 1. Заголовок (titleText) - большой синий акцент -->
+  <div class="bg-indigo-50 rounded-xl p-5 border-l-6 border-[#667eea]">
+    <label class="block text-sm font-medium text-indigo-700 mb-2">
+      Заголовок письма (titleText)
+      <span class="text-xs text-indigo-500 ml-2">— большой синий текст в центре</span>
+    </label>
+    <textarea 
+      [(ngModel)]="editableContent.titleText"
+      (ngModelChange)="onContentChange()"
+      rows="2"
+      placeholder="It looks like you forgot something important…"
+      class="textarea textarea-bordered w-full focus:ring-indigo-400 min-h-[80px]"></textarea>
+  </div>
+
+  <!-- 2. Выделенный блок (highlightText) - светлый фон + индиго бордер -->
+  <div class="bg-[#f8f9fa] rounded-xl p-5 border-l-6 border-[#667eea]">
+    <label class="block text-sm font-medium text-gray-700 mb-2">
+      Выделенный важный текст (highlightText)
+      <span class="text-xs text-gray-500 ml-2">— серый фон с синей полосой слева</span>
+    </label>
+    <textarea 
+      [(ngModel)]="editableContent.highlightText"
+      (ngModelChange)="onContentChange()"
+      rows="3"
+      placeholder="We still remember your meme vibe — it's truly legendary"
+      class="textarea textarea-bordered w-full focus:ring-indigo-400 min-h-[100px]"></textarea>
+  </div>
+
+  <!-- 3. Важное предупреждение (prizeText) - красный акцент -->
+  <div class="bg-[#fff5f5] rounded-xl p-5 border-l-[5px] border-[#e74c3c]">
+    <label class="block text-sm font-medium text-red-700 mb-2">
+      Важное предупреждение / Призыв внимания (prizeText)
+      <span class="text-xs text-red-500 ml-2">— красная полоса слева</span>
+    </label>
+    <textarea 
+      [(ngModel)]="editableContent.prizeText"
+      (ngModelChange)="onContentChange()"
+      rows="2"
+      placeholder="But your reward seems to have been left behind for some reason"
+      class="textarea textarea-bordered w-full focus:ring-red-400 min-h-[80px]"></textarea>
+  </div>
+
+  <!-- 4. Основное описание (descriptionText) - нейтральный блок -->
+  <div class="bg-gray-50 rounded-xl p-5 border-l-6 border-gray-300">
+    <label class="block text-sm font-medium text-gray-700 mb-2">
+      Основное описание / объяснение (descriptionText)
+      <span class="text-xs text-gray-500 ml-2">— обычный текст письма</span>
+    </label>
+    <textarea 
+      [(ngModel)]="editableContent.descriptionText"
+      (ngModelChange)="onContentChange()"
+      rows="4"
+      placeholder="You aced the quiz «What Type of Meme Are You?» and proved..."
+      class="textarea textarea-bordered w-full focus:ring-gray-400 min-h-[120px]"></textarea>
+  </div>
+
+  <!-- 5. Призыв к действию (callToAction) - голубой/циановый акцент -->
+  <div class="bg-[#f0f2ff] rounded-xl p-5 border-l-[5px] border-[#00cfbd]">
+    <label class="block text-sm font-medium text-cyan-700 mb-2">
+      Призыв к действию (callToAction)
+      <span class="text-xs text-cyan-600 ml-2">— голубой блок с призывом</span>
+    </label>
+    <textarea 
+      [(ngModel)]="editableContent.callToAction"
+      (ngModelChange)="onContentChange()"
+      rows="3"
+      placeholder="We're sure the reward from our partners will suit you perfectly..."
+      class="textarea textarea-bordered w-full focus:ring-cyan-400 min-h-[100px]"></textarea>
+  </div>
+
+</div>
+
+<!-- ==================== БЛОК КНОПКИ ==================== -->
+<div class="bg-purple-50 rounded-xl p-6 border-l-6 border-purple-500 mt-8">
+  <label class="block text-sm font-medium text-purple-700 mb-3">
+    Ссылка на кнопку «Nhận phần thưởng»
+    <span class="text-xs text-purple-500 ml-2">— куда ведёт кнопка</span>
+  </label>
+  <input 
+    [(ngModel)]="editableContent.btnLink"
+    (ngModelChange)="onContentChange()"
+    type="text"
+    placeholder="https://1betgo.xyz/pmzC4m?to=6"
+    class="input input-bordered w-full focus:ring-purple-400" />
+</div>
+
+    <!-- Кнопки действий -->
+    <div class="flex gap-4 pt-4">
+      <button 
+        class="btn btn-error flex-1"
+        (click)="deleteTemplate(selectedTemplate!)"
+        [disabled]="isLoading || !selectedTemplate">
+        Удалить шаблон
+      </button>
+    </div>
+  </div>
+
+  <!-- ==================== ПРАВАЯ ЧАСТЬ — ПРЕВЬЮ ==================== -->
+<div class="w-full max-w-[600px]">
+  <div class="bg-white rounded-2xl shadow-[0_15px_40px_rgba(0,0,0,0.1)] overflow-hidden">
+
+    <!-- Хедер (точно как в шаблоне) -->
+    <div class="bg-gradient-to-br from-[#667eea] to-[#764ba2] text-white text-center py-8 px-5">
+      <img src="https://i.ibb.co/QF0sMsFF/6.png" alt="VoteVibe" class="h-[60px] mx-auto mb-4" />
+    </div>
+
+    <!-- Основной контент -->
+    <div class="p-8 md:p-10 text-[#2c3e50] leading-relaxed">
+
+      <!-- Приветствие -->
+      <p class="text-[22px] font-bold text-center mb-6">
+        Xin chào, <span class="text-[#667eea]">{{ previewName }}</span>!
+      </p>
+
+      <!-- titleText -->
+      <div *ngIf="editableContent.titleText" 
+           class="text-[26px] font-extrabold text-[#667eea] leading-tight text-center mb-6">
+        {{ editableContent.titleText }}
+      </div>
+
+      <!-- highlightText -->
+      <div *ngIf="editableContent.highlightText"
+           class="text-lg font-semibold bg-[#f8f9fa] p-5 rounded-xl border-l-6 border-[#667eea] mb-8">
+        {{ editableContent.highlightText }}
+      </div>
+
+      <!-- prizeText -->
+      <div *ngIf="editableContent.prizeText"
+           class="text-[17px] bg-[#fff5f5] p-5 rounded-xl border-l-[5px] border-[#e74c3c] mb-8">
+        <strong>Chú ý! </strong>{{ editableContent.prizeText }}
+      </div>
+
+      <!-- descriptionText -->
+      <div *ngIf="editableContent.descriptionText"
+           class="text-base leading-[1.7] text-[#34495e] mb-8 whitespace-pre-wrap">
+        {{ editableContent.descriptionText }}
+      </div>
+
+      <!-- callToAction -->
+      <div *ngIf="editableContent.callToAction"
+           class="bg-[#f0f2ff] p-6 rounded-2xl text-center border-l-[5px] border-[#00cfbd] mb-10">
+        <p class="text-lg font-semibold text-[#2c3e50]">
+          {{ editableContent.callToAction }}
+        </p>
+      </div>
+
+      <!-- Кнопка (точно как в шаблоне) -->
+      <div class="text-center mb-12">
+        <a 
+          [href]="editableContent.btnLink.trim() || 'https://votevibe.club'"
+          target="_blank"
+          class="inline-block px-12 py-4 bg-gradient-to-r from-[#00cfbd] to-[#00b3f0] 
+                 text-white font-bold text-[19px] rounded-2xl shadow-[0_8px_25px_rgba(59,130,246,0.5)] 
+                 hover:shadow-[0_12px_35px_rgba(59,130,246,0.6)] transition-all duration-300">
+          Получайте награды
+        </a>
+      </div>
+
+      <!-- Футер (точно как в шаблоне) -->
+      <div class="pt-8 border-t-2 border-[#eee] text-center text-[#95a5a6] text-sm leading-relaxed">
+        Спасибо за участие! Если у вас возникнут вопросы, пожалуйста, отправьте электронное письмо по адресу:
+        <a href="mailto:hello@votevibe.club" 
+           class="text-[#d946ef] font-semibold hover:underline">
+         {{helloMail}}
+        </a>
+        <br><br>
+        © {{ currentYear }} VoteVibe. All rights reserved.
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- Пустое состояние -->
+  <div *ngIf="!isLoading && templates.length === 0" class="text-center py-16 bg-gray-50 rounded-xl">
+    <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" class="mx-auto mb-4 text-gray-400">
+      <path fill="currentColor" d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+    </svg>
+    <p class="text-gray-500 text-lg mb-6">
+      У этого квиза пока нет Follow-up писем
+    </p>
+  </div>
+
+</div>

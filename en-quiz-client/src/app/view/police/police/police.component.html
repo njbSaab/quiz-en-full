@@ -1,0 +1,51 @@
+  <app-banner
+    [quizCount]="quizCount"
+    [page]="banner"
+  ></app-banner>
+
+<section class="bg-gradient-blue-180">
+  <div class="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:pb-12 sm:pt-8 lg:px-8 lg:pb-16 lg:pt-8">
+    <div class="mx-auto max-w-lg text-center">
+      <h2 class="text-2xl capitalize lg:text-3xl font-semibold tracking-tight cursor-pointer text-center">
+        <span class="bg-gradient-to-r from-fuchsia-400 via-cyan-300 to-violet-400 bg-clip-text text-transparent">
+          {{ data?.title || 'About Us...' }}
+        </span>
+      </h2>
+
+      <p class="mt-[10px] md:mt-4 text-gray-300">
+        {{ data?.subtitle }}
+      </p>
+    </div>
+
+    <div class="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+      <a *ngFor="let card of data?.cards; let i = index"
+         class="bg-gradient-blue-180 block rounded-xl p-8 shadow-xl transition hover:shadow-none"
+         [class.bg-shadow-fuchsia]="card.color === 'fuchsia' || i % 3 === 0"
+         [class.bg-shadow-center]="card.color === 'center' || i % 3 === 1"
+         [class.bg-shadow-cayn]="card.color === 'cayn' || i % 3 === 2"
+         href="javascript:void(0)">
+         
+        <svg xmlns="http://www.w3.org/2000/svg"
+             class="size-10"
+             [class.text-fuchsia-500]="card.color === 'fuchsia' || i % 3 === 0"
+             [class.text-blue-300]="card.color === 'center' || i % 3 === 1"
+             [class.text-cyan-300]="card.color === 'cayn' || i % 3 === 2"
+             fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path fill="currentColor" d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12c5.16-1.26 9-6.45 9-12V5zm2.5 11.59l.9 3.88l-3.4-2.05l-3.4 2.05l.9-3.87l-3-2.59l3.96-.34L12 6.02l1.54 3.64l3.96.34z"/>
+        </svg>
+
+        <h2 class="mt-4 text-xl font-bold text-white">
+          {{ card.title }}
+        </h2>
+
+        <p class="mt-1 text-sm text-gray-300" [innerHTML]="replaceEmail(card.body)"></p>
+      </a>
+    </div>
+
+    <!-- Кнопка CTA -->
+    <a [routerLink]="data?.ctaLink || '/quiz/3'"
+       class="w-fit mx-auto mt-8 flex items-center justify-center rounded-2xl px-5 py-3 text-sm sm:text-base font-semibold bg-gradient-to-r from-fuchsia-500 to-cyan-400 text-slate-950 shadow-lg shadow-fuchsia-500/20 hover:opacity-95 transition">
+      {{ data?.ctaText || 'Start Now...' }}
+    </a>
+  </div>
+</section>

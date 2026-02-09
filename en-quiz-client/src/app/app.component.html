@@ -1,0 +1,16 @@
+<!-- app.component.html -->
+<div class="wrapper-main">
+  <app-header *ngIf="showHeaderFooter"></app-header>
+  
+  <main class="main">
+    <!-- Показываем скелетон пока не загрузился первый компонент -->
+    <div class="loading-overlay" *ngIf="isRouting">
+      <span>Quizzes Loading...</span>
+    </div>
+    
+    <!-- Само содержимое роутера -->
+    <router-outlet (activate)="onRouteActivate()" />
+  </main>
+
+  <app-footer></app-footer>
+</div>

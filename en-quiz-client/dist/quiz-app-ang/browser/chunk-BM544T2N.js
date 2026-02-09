@@ -1,0 +1,1 @@
+import{a}from"./chunk-5FN44HLI.js";import"./chunk-EDUUORZK.js";import"./chunk-D2FFKYMU.js";import"./chunk-GWB5ALKS.js";import"./chunk-4IUZEY4L.js";import"./chunk-Y475WE7D.js";export{a as ContactsModule};

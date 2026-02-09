@@ -1,0 +1,49 @@
+      <!-- Метаданные письма-->
+      <div class="space-y-3 bg-gray-50 rounded-xl p-4 border-l-4 border-orange-500">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1">App</label>
+            <input 
+              [(ngModel)]="selectedTemplate.app" 
+              type="text" 
+              placeholder="quiz"
+              class="input input-sm input-bordered w-full" />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1">Geo</label>
+            <input 
+              [(ngModel)]="selectedTemplate.geo" 
+              type="text" 
+              placeholder="vn"
+              class="input input-sm input-bordered w-full" />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1">Sequence ID</label>
+            <input 
+              [(ngModel)]="selectedTemplate.sequenceId" 
+              type="number" 
+              min="1"
+              class="input input-sm input-bordered w-full" />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1">Step</label>
+            <input 
+              [(ngModel)]="selectedTemplate.step" 
+              type="number" 
+              min="1"
+              class="input input-sm input-bordered w-full" />
+          </div>
+
+          <div class="col-span-2">
+            <label class="block text-sm font-medium text-gray-600 mb-1">Delay (часов)</label>
+            <input 
+              [(ngModel)]="selectedTemplate.delayHours" 
+              type="number" 
+              min="0"
+              class="input input-sm input-bordered w-full" />
+          </div>
+        </div>
+      </div>

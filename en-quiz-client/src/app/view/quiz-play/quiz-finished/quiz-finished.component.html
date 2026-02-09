@@ -1,0 +1,61 @@
+<div class="text-center overflow-hidden mx-w-1024 font-medium">
+  <div class="wrapper relative flex w-fit mx-auto justify-center items-center gap-[20px]">
+    <!-- Логотип -->
+    <div class="navbar-start w-fit cursor-pointer">
+      <img
+        [src]="text.logo || 'https://i.ibb.co/Qvd3RYXX/5.png'"
+        [alt]="text.brandName || 'VoteVibe'"
+        class="w-[55px] md:w-[70px]"
+      />
+    </div>
+
+    <!-- Название бренда по центру -->
+    <div class="navbar-center flex-1 justify-center">
+      <span class="text-3xl md:text-[2.1rem] font-semibold tracking-tight cursor-pointer">
+        <span class="bg-gradient-to-r from-fuchsia-400 via-cyan-300 to-violet-400 bg-clip-text text-transparent">
+          {{ text.brandName || 'VoteVibe' }}
+        </span>
+      </span>
+    </div>
+  </div>
+
+  <!-- Заголовок и подзаголовок -->
+  <h5 class="text-2xl md:text-3xl pt-10 pb-5 relative z-10 confity-img">
+    {{ text.title || 'Congratulations' }}
+    <br />
+    <span class="text-2xl md:text-3xl">
+      {{ text.subtitle || 'You have successfully completed the test.' }}
+    </span>
+  </h5>
+
+  <!-- Конфетти (включается/выключается из админки) -->
+  <img
+    *ngIf="text.confetti !== false"
+    class="fixed confity"
+    src="https://cdn.pixabay.com/animation/2024/05/02/07/43/07-43-00-535_512.gif"
+    alt="Confetti"
+  />
+
+  <!-- Динамический текст от квиза (если есть) -->
+  <p *ngIf="quiz?.finalPage" 
+    class="text-lg md:text-xl text-gray-300 mb-8" 
+    [innerHTML]="quiz!.finalPage">
+  </p>
+
+  <!-- Кнопки -->
+  <div class="btn-grup flex flex-col gap-3 max-w-[400px] mx-auto relative z-10">
+    <button
+      (click)="getResults.emit()"
+      class="btn btn-success text-2xl md:h-[60px] hover:scale-105 transition"
+    >
+      {{ text.buttonResults || 'Achievements' }}
+    </button>
+
+    <button
+      (click)="reset.emit()"
+      class="btn btn-ghost rounded-[30px] hover:bg-base-200 transition"
+    >
+      {{ text.buttonRestart || 'Restart' }}
+    </button>
+  </div>
+</div>

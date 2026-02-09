@@ -1,0 +1,136 @@
+<section class="pages-edit py-[0px] px-[10px] min-h-screen">
+  <!-- Заголовок -->
+  <div
+    class="header-title shadow-block flex items-center justify-between w-full"
+  >
+    <h1 class="title text-2xl font-bold text-indigo-500">Изменить страницу</h1>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="48"
+      height="48"
+      viewBox="0 0 24 24"
+    >
+      <g
+        fill="none"
+        stroke="#4F45E5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+      >
+        <path stroke-dasharray="20" stroke-dashoffset="20" d="M3 21h18">
+          <animate
+            fill="freeze"
+            attributeName="stroke-dashoffset"
+            dur="0.2s"
+            values="20;0"
+          />
+        </path>
+        <path
+          fill="#4F45E5"
+          fill-opacity="0"
+          stroke-dasharray="48"
+          stroke-dashoffset="48"
+          d="M7 17v-4l10 -10l4 4l-10 10h-4"
+        >
+          <animate
+            fill="freeze"
+            attributeName="fill-opacity"
+            begin="1.1s"
+            dur="0.5s"
+            values="0;1"
+          />
+          <animate
+            fill="freeze"
+            attributeName="stroke-dashoffset"
+            begin="0.2s"
+            dur="0.6s"
+            values="48;0"
+          />
+        </path>
+        <path stroke-dasharray="8" stroke-dashoffset="8" d="M14 6l4 4">
+          <animate
+            fill="freeze"
+            attributeName="stroke-dashoffset"
+            begin="0.8s"
+            dur="0.2s"
+            values="8;0"
+          />
+        </path>
+      </g>
+    </svg>
+  </div>
+
+  <!-- ТАБЫ — ВЕРНУЛИ!!! -->
+  <div
+    class="tabs tabs-boxed bg-base-100 p-2 rounded-box shadow-block-bottom mb-4 mt-4 overflow-x-auto min-h-[48px]"
+  >
+    <ng-container *ngFor="let page of pages">
+      <input
+        type="radio"
+        name="page_tabs"
+        class="tab hidden"
+        [id]="'tab-' + page.slug"
+        [checked]="activeSlug === page.slug"
+        (change)="selectPage(page.slug)"
+      />
+      <label
+        [for]="'tab-' + page.slug"
+        class="tab tab-lifted cursor-pointer whitespace-nowrap px-6"
+        [class.tab-active]="activeSlug === page.slug"
+      >
+        <span class="font-medium">{{ page.slug }}</span>
+      </label>
+    </ng-container>
+  </div>
+
+  <!-- КОНТЕНТ ТАБОВ — один контейнер -->
+  <div
+    class="radius-30 shadow-2xl bg-base-100 min-h-[80dvh] overflow-y-auto rounded-box"
+  >
+    <div class="p-8 pt-[0] min-h-full">
+      <div *ngIf="activeSlug === 'home' && activePage" class="h-full">
+        <app-home [page]="activePage!"></app-home>
+      </div>
+
+      <div *ngIf="activeSlug === 'contacts' && activePage" class="h-full">
+        <app-contacts [page]="activePage!"></app-contacts>
+      </div>
+
+      <div *ngIf="activeSlug === 'faq' && activePage" class="h-full">
+        <app-faq [page]="activePage!"></app-faq>
+      </div>
+
+      <div *ngIf="activeSlug === 'terms' && activePage" class="h-full">
+        <app-terms [page]="activePage!"></app-terms>
+      </div>
+
+      <div *ngIf="activeSlug === 'form' && activePage" class="h-full">
+        <app-form [page]="activePage!"></app-form>
+      </div>
+
+      <div *ngIf="activeSlug === 'thanks' && activePage" class="h-full">
+        <app-thanks [page]="activePage!"></app-thanks>
+      </div>
+
+      <div *ngIf="activeSlug === 'about' && activePage" class="h-full">
+        <app-about [page]="activePage!"></app-about>
+      </div>
+
+      <div *ngIf="activeSlug === 'policy' && activePage" class="h-full">
+        <app-policy [page]="activePage!"></app-policy>
+      </div>
+
+      <div *ngIf="activeSlug === 'menu-items' && activePage" class="h-full">
+        <app-menu-items [page]="activePage!"></app-menu-items>
+      </div>
+
+      <!-- Лоадер -->
+      <div
+        class="flex items-center justify-center h-full text-gray-500"
+        *ngIf="!activePage"
+      >
+        <app-loader></app-loader>
+      </div>
+    </div>
+  </div>
+</section>

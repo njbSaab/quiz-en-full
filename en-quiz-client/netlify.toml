@@ -1,0 +1,9 @@
+[build]
+  command = "ng build"
+  publish = "dist/quiz-app-ang/browser" # Измените на dist/quiz-app-ang/browser
+  base = "."
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

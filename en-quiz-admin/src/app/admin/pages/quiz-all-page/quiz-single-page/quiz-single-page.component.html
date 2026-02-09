@@ -1,0 +1,133 @@
+<div class="section edit-single-page">
+  <!-- Загрузка -->
+  <div *ngIf="!loading; else loadingTemplate">
+    <div *ngIf="quiz; else errorTemplate">
+
+      <!-- === ЗАГОЛОВОК === -->
+      <div class="edit-single-page-header flex items-center relative">
+        <a routerLink="/admin/all-quizes"
+           class="icon-back absolute left-[50px] cursor-pointer text-gray-500 text-lg flex items-center gap-2 font-bold hover:bg-base-200 rounded-xl px-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24">
+            <path fill="#4F45E5" d="M2 12A10 10 0 0 1 12 2a10 10 0 0 1 10 10a10 10 0 0 1-10 10A10 10 0 0 1 2 12m16-1h-8l3.5-3.5l-1.42-1.42L6.16 12l5.92 5.92l1.42-1.42L10 13h8z"/>
+          </svg>
+          Back
+        </a>
+
+        <div class="header-tab flex items-center justify-between px-[20px] py-[20px] my-[20px] radius-30 w-fit gap-4 mx-auto tracking-wide bg-base-100 shadow-block">
+          <h2 class="title-tab text-xl font-bold text-gray-600">
+            {{ quiz.id }} - {{ quiz.title }}
+          </h2>
+
+          <button class="btn btn-success" (click)="toggleEdit()" *ngIf="!isEditing">
+            Редактировать
+          </button>
+
+          <button class="btn btn-circle icon-cancel hover:btn-error hover:fill-white hover:text-white"
+                  (click)="deleteQuiz()" [disabled]="isLoading">
+            <span *ngIf="isLoading" class="loading loading-spinner text-error"></span>
+            <svg *ngIf="!isLoading" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
+              <path fill="#e54545" d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6zm2.46-7.12l1.41-1.41L12 12.59l2.12-2.12l1.41 1.41L13.41 14l2.12 2.12l-1.41 1.41L12 15.41l-2.12 2.12l-1.41-1.41L10.59 14zM15.5 4l-1-1h-5l-1 1H5v2h14V4z"/>
+            </svg>
+          </button>
+
+          <p class="text-md font-bold flex items-center gap-2 absolute right-[6%]">
+            <span class="text-success text-nowrap" *ngIf="quiz.isActive">Active: 🟢</span>
+            <span class="text-error text-nowrap" *ngIf="!quiz.isActive">Non active: 🔴</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- === ОШИБКА === -->
+      <div *ngIf="errorMessage" class="alert alert-error relative mb-4">
+        {{ errorMessage }}
+        <span class="close" (click)="errorMessage = null">X</span>
+      </div>
+
+      <!-- === ДАТА ОБНОВЛЕНИЯ === -->
+      <div class="card-date flex items-center gap-2 justify-center mb-4">
+        <p class="text-md text-gray-500">
+          Дата обновления: {{ quiz.updatedAt | date : "medium" }}
+        </p>
+      </div>
+
+      <!-- === КАРТОЧКА КВИЗА === -->
+      <div class="card bg-base-100 mx-auto w-[80%] lg:w-[90%] shadow-block h-full overflow-y-auto">
+
+        <!-- РЕЖИМ ПРОСМОТРА -->
+        <div *ngIf="!isEditing">
+          <figure *ngIf="quiz.previewImage">
+            <img [src]="quiz.previewImage" alt="Quiz Image" class="w-full h-[350px] object-cover object-center"/>
+          </figure>
+
+          <div class="card-body">
+            <div class="inner-info flex justify-between items-center">
+              <p class="text-[15px] font-bold flex items-center gap-2">
+                <span>{{ quiz.isMainView ? "На главной странице" : "В общем списке" }}</span>
+                <span class="text-success text-nowrap" *ngIf="quiz.isActive">Active: 🟢</span>
+                <span class="text-error text-nowrap" *ngIf="!quiz.isActive">Non active: 🔴</span>
+              </p>
+              <p class="w-fit text-gray-400 text-center text-[15px]" *ngIf="quiz.rating">
+                Рейтинг: <span class="text-indigo-500 font-bold">{{ quiz.rating }} ⭐️</span>
+              </p>
+            </div>
+
+            <div class="title-group">
+              <h2 class="my-4 card-title text-2xl text-center w-full item-center justify-center">{{ quiz.title }} <span class="text-gray-400">({{quiz.titleAdm}})</span></h2>
+              <p class="text-lg text-center" *ngIf="quiz.description">{{ quiz.description }}</p>
+              <p class="text-[15px] text-center text-gray-400">{{ quiz.descriptionAdm }}</p>
+            </div>
+
+            <div class="mt-8" *ngIf="quiz.questions && quiz.questions.length > 0">
+              <ul>
+                <li class="question-previev-item shadow-md shadow-indigo-300" *ngFor="let question of quiz.questions; let i = index">
+                  <img [src]="question.image" alt="" *ngIf="question.image"/>
+                  <div class="question-wrapper">
+                    <p class="question-previev-card bg-green-600 text-xl text-black font-bold questions-wrapper">
+                      {{ i + 1 }}. {{ question.text }}
+                    </p>
+                    <ul>
+                      <li *ngFor="let answer of question.answers; let j = index">
+                        <span class="text-lg">
+                          <span class="text-gray-500">{{ j + 1 }}.</span>
+                          {{ answer.text }}
+                          {{ answer.isCorrect ? "✅" : "❌" }}
+                        </span>
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <div class="card-actions justify-center pt-[20px]">
+              <button class="btn btn-ghost btn-info pr-0" (click)="toggleEdit()">
+                Редактировать
+                <span class="btn btn-soft btn-info"><app-edit-ico></app-edit-ico></span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- РЕЖИМ РЕДАКТИРОВАНИЯ — ЗАМЕНА НА ФОРМУ -->
+        <app-quiz-form
+          *ngIf="isEditing"
+          mode="edit"
+          [quiz]="quiz"
+          (saved)="onSaved($event)"
+          (cancelled)="onCancel()"
+        ></app-quiz-form>
+
+      </div>
+    </div>
+
+    <!-- Ошибка: квиз не найден -->
+    <ng-template #errorTemplate>
+      <div class="alert alert-error">Квиз не найден</div>
+    </ng-template>
+  </div>
+
+  <!-- Загрузка -->
+  <ng-template #loadingTemplate>
+    <app-loader></app-loader>
+  </ng-template>
+</div>

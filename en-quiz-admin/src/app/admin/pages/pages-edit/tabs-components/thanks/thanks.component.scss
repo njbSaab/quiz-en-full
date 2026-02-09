@@ -1,0 +1,12 @@
+.btn-thanks.btn-success {
+  --tw-text-opacity: 1;
+  color: var(--fallback-suc, oklch(var(--suc) / var(--tw-text-opacity)));
+  outline-color: transparent !important;
+  background: linear-gradient(90deg, #00a96e, #67e8f9) !important;
+  border-radius: 30px !important;
+  cursor: pointer;
+}
+.btn-ghost.btn-ghost-thanks {
+  border-radius: 30px !important;
+  cursor: pointer;
+}

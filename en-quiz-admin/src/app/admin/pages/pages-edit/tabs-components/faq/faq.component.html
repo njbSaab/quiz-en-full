@@ -1,0 +1,212 @@
+<section class="pages">
+  <div class="flex items-center gap-4">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="48"
+      height="48"
+      viewBox="0 0 24 24"
+      class="text-indigo-500"
+    >
+      <g
+        fill="none"
+        stroke="#6366f1"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+      >
+        <path stroke-dasharray="20" stroke-dashoffset="20" d="M3 21h18">
+          <animate
+            fill="freeze"
+            attributeName="stroke-dashoffset"
+            dur="0.2s"
+            values="20;0"
+          />
+        </path>
+        <path
+          fill="#6366f1"
+          fill-opacity="0"
+          stroke-dasharray="48"
+          stroke-dashoffset="48"
+          d="M7 17v-4l10 -10l4 4l-10 10h-4"
+        >
+          <animate
+            fill="freeze"
+            attributeName="fill-opacity"
+            begin="1.1s"
+            dur="0.5s"
+            values="0;1"
+          />
+          <animate
+            fill="freeze"
+            attributeName="stroke-dashoffset"
+            begin="0.2s"
+            dur="0.6s"
+            values="48;0"
+          />
+        </path>
+        <path stroke-dasharray="8" stroke-dashoffset="8" d="M14 6l4 4">
+          <animate
+            fill="freeze"
+            attributeName="stroke-dashoffset"
+            begin="0.8s"
+            dur="0.2s"
+            values="8;0"
+          />
+        </path>
+      </g>
+    </svg>
+    <h2 class="text-3xl font-bold text-indigo-600">
+      Редактировать FAQ (Privacy)
+    </h2>
+  </div>
+
+  <div class="flex flex-row gap-12 items-start mt-8 pb-20">
+    <!-- Левая часть: Редактор -->
+    <div class="w-full max-w-[600px] space-y-6">
+      <!-- Основные поля -->
+      <div class="space-y-4">
+        <div>
+          <label class="label font-medium">Главный заголовок</label>
+          <input
+            [(ngModel)]="editableContent.title"
+            (input)="onFieldChange()"
+            class="input input-bordered w-full"
+          />
+        </div>
+
+        <div>
+          <label class="label font-medium">Подзаголовок</label>
+          <textarea
+            [(ngModel)]="editableContent.subtitle"
+            (input)="onFieldChange()"
+            rows="3"
+            class="textarea textarea-bordered w-full resize-none"
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- Все вопросы — как один текст с отступами -->
+      <div class="space-y-4">
+        <div class="flex justify-between items-center">
+          <h3 class="text-xl font-semibold">Вопросы и ответы</h3>
+          <button class="btn btn-success btn-sm" (click)="addFaq()">
+            + Добавить вопрос
+          </button>
+        </div>
+
+        <div class="space-y-2">
+          <div
+            *ngFor="let item of editableContent.faq; let i = index"
+            class="relative pl-10"
+          >
+            <div class="flex items-center mb-3">
+              <!-- Номер вопроса -->
+              <div>
+                <span
+                  class="btn btn-ghost btn-circle font-medium text-xl text-white bg-indigo-500 flex items-center justify-center"
+                >
+                  {{ i + 1 }}
+                </span>
+              </div>
+              <!-- Поле вопроса -->
+              <div>
+                <input
+                  [(ngModel)]="item.question"
+                  (input)="onFieldChange()"
+                  placeholder="Введите вопрос..."
+                  class="input input-bordered w-full text-lg font-medium"
+                />
+              </div>
+              <!-- Кнопки управления -->
+              <div class="flex gap-1">
+                <button class="btn btn-ghost btn-circle" (click)="removeFaq(i)">
+                  ❌
+                </button>
+              </div>
+            </div>
+
+            <!-- Поле ответа -->
+            <div class="pl-10">
+              <textarea
+                [(ngModel)]="item.answer"
+                (input)="onFieldChange()"
+                rows="5"
+                placeholder="Введите ответ в формате HTML..."
+                class="textarea textarea-bordered w-full font-mono text-sm h-[80px]"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Если нет вопросов -->
+        <div
+          *ngIf="editableContent.faq.length === 0"
+          class="text-center py-12 text-gray-500 border-2 border-dashed rounded-xl"
+        >
+          Нет вопросов.<br />
+          Нажмите "+ Добавить вопрос", чтобы создать первый.
+        </div>
+      </div>
+
+      <!-- Сохранение -->
+      <div class="flex items-center justify-between mt-8">
+        <div class="flex flex-col items-center gap-4 w-full">
+          <button
+            class="btn btn-success btn-save"
+            (click)="saveManually()"
+            [disabled]="saving"
+          >
+            <span class="loading loading-spinner" *ngIf="saving"></span>
+            Сохранить изменения
+          </button>
+
+          <div
+            class="text-sm"
+            [ngClass]="{
+              'text-success': saveStatus === 'success',
+              'text-error': saveStatus === 'error',
+              'text-info': saveStatus === 'saving',
+            }"
+          >
+            {{ saveMessage }}
+            <span
+              *ngIf="saveStatus === 'idle' && editableContent.faq.length > 0"
+            >
+              Автосохранение через 1.5с после изменения
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Правая часть: Живое превью -->
+    <div class="flex-1 overflow-hidden bg-gray-900 rounded-2xl shadow-2xl">
+      <div class="max-w-screen-xl p-8 mx-auto bg-shadow w-full">
+        <h2
+          class="md:text-center text-pretty mb-2 text-lg md:text-2xl font-extrabold md:leading-9 text-white-50 text-center text-white"
+        >
+          {{ editableContent.title || '隱私政策' }}
+        </h2>
+        <p
+          class="md:text-center text-pretty text-center mb-10 text-md md:text-xl font-extrabold md:leading-6 opacity-70 text-white"
+        >
+          {{ editableContent.subtitle }}
+        </p>
+
+        <ul class="grid grid-cols-1 items-center gap-6 bg-shadow p-4">
+          <li class="w-full" *ngFor="let item of editableContent.faq">
+            <p class="text-lg font-medium leading-6 text-white">
+              {{ item.question }}
+            </p>
+            <div class="mt-2">
+              <p
+                class="text-base leading-6 text-white/50"
+                [innerHTML]="item.answer"
+              ></p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,159 @@
+<!-- header.component.html -->
+<header class="header">
+  <!-- ОСНОВНАЯ НАВИГАЦИЯ -->
+  <div class="navbar glass relative">
+    <!-- ЛОГО СЛЕВА -->
+    <div class="navbar-start w-fit cursor-pointer" 
+    [routerLink]="['/']"
+    (click)="closeMenu()">
+      <img
+        class="w-[50px]"
+        src="https://i.ibb.co/Qvd3RYXX/5.png"
+        alt="VoteVibe"
+      />
+    </div>
+
+    <!-- НАЗВАНИЕ ПО ЦЕНТРУ -->
+    <div class="navbar-center flex-1 justify-center">
+      <span
+        class="text-lg font-semibold tracking-tight cursor-pointer"
+        [routerLink]="['/']"
+        (click)="closeMenu()">
+        <span class="bg-gradient-to-r from-fuchsia-400 via-cyan-300 to-violet-400 bg-clip-text text-transparent">
+          VoteVibe
+        </span>
+      </span>
+    </div>
+
+    <!-- КНОПКА МЕНЮ -->
+    <div class="navbar-end w-fit">
+      <label
+        for="menu-toggle"
+        class="btn btn-circle bg-gradient-to-r from-fuchsia-500 to-cyan-400 accent-hover swap swap-rotate">
+        <svg class="swap-off fill-current w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+          <path d="M64,384H448V341.33H64Zm0-106.67H448V234.67H64ZM64,128v42.67H448V128Z"/>
+        </svg>
+        <svg (click)="closeMenu()" class="swap-on fill-current w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+          <polygon points="400 145.49 366.51 112 256 222.51 145.49 112 112 145.49 222.51 256 112 366.51 145.49 400 256 289.49 366.51 400 400 366.51 289.49 256 400 145.49"/>
+        </svg>
+      </label>
+      <div class="btn-group">
+        <button 
+          *ngIf="showInstallButton"
+          (click)="installPwa()"
+          class="absolute top-[15px] bottom-0 left-auto right-[65px] md:right-[75px] -translate-x-1/2 
+          btn btn-circle bg-gradient-to-r to-cyan-400 from-green-400 
+          font-bold rounded-full shadow-2xl flex items-center z-50 animate-bounce text-black">
+          <svg xmlns="http://www.w3.org/2000/svg" class="text-black" width="32" height="32" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M12 4c4.41 0 8 3.59 8 8s-3.59 8-8 8s-8-3.59-8-8s3.59-8 8-8m0-2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m1 10V8h-2v4H8l4 4l4-4z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- СКРЫТЫЙ CHECKBOX -->
+  <input
+    id="menu-toggle"
+    type="checkbox"
+    class="hidden"
+    [checked]="isMenuOpen"
+    (change)="onToggle($event)"/>
+
+  <!-- ✅ МОБИЛЬНОЕ МЕНЮ (динамическое) -->
+  <div class="drawer drawer-end md:hidden fixed z-[1111]" [class.drawer-open]="isMenuOpen">
+    <input id="mobile-drawer" type="checkbox" class="drawer-toggle" (click)="closeMenu()"/>
+    <div class="drawer-side z-50">
+      <label for="menu-toggle" class="drawer-overlay" (click)="closeMenu()"></label>
+      <ul class="menu bg-base-200 min-h-full w-80 bg-black/80">
+        <!-- Лого и название -->
+        <li class="flex flex-row justify-center items-center py-4">
+          <img
+            [routerLink]="['/main']"
+            (click)="closeMenu()"
+            class="w-[50px] p-0"
+            src="https://i.ibb.co/Qvd3RYXX/5.png"
+            alt=""/>
+          <span class="text-3xl font-semibold tracking-tight cursor-pointer">
+            <span
+              [routerLink]="['/main']"
+              (click)="closeMenu()"
+              class="bg-gradient-to-r from-fuchsia-400 via-cyan-300 to-violet-400 bg-clip-text text-transparent">
+              VoteVibe
+            </span>
+            <svg
+              (click)="closeMenu()"
+              xmlns="http://www.w3.org/2000/svg"
+              width="35"
+              height="35"
+              viewBox="0 0 24 24"
+              class="absolute right-0 cursor-pointer top-0 p-0">
+              <g fill="none" stroke="#fff" stroke-dasharray="16" stroke-dashoffset="16" 
+                 stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                <path d="M7 7l10 10"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.4s" values="16;0"/></path>
+                <path d="M17 7l-10 10"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.4s" dur="0.4s" values="16;0"/></path>
+              </g>
+            </svg>
+          </span>
+        </li>
+        
+        <!-- ✅ ДИНАМИЧЕСКИЕ ПУНКТЫ МЕНЮ -->
+        <li *ngFor="let item of menuItems">
+          <a
+            [routerLink]="[item.route]"
+            (click)="closeMenu()"
+            routerLinkActive="router-link-active"
+            class="btn btn-ghost accent-hover rounded-xl">
+            {{ item.label }}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+              <path fill="#fff" d="M12.6 12L8 7.4L9.4 6l6 6l-6 6L8 16.6z"/>
+            </svg>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ✅ ДЕСКТОПНОЕ МЕНЮ (динамическое) -->
+  <div
+    class="hidden md:block fixed top-0 right-0 h-full w-80 bg-base-200 z-50 transition-transform duration-300 drawer-desktop"
+    [class.translate-x-0]="isMenuOpen"
+    [class.translate-x-full]="!isMenuOpen">
+    <div class="absolute inset-0 bg-black/50 drawer-overlay" (click)="closeMenu()" *ngIf="isMenuOpen"></div>
+    <div class="relative h-full p-0">
+      <ul class="menu">
+        <!-- Лого и название -->
+        <li class="flex flex-row justify-center items-center py-4" (click)="closeMenu()">
+          <img class="w-[70px]" src="https://i.ibb.co/Qvd3RYXX/5.png" alt=""/>
+          <span [routerLink]="['/main']" class="text-3xl font-semibold tracking-tight cursor-pointer">
+            <span class="bg-gradient-to-r from-fuchsia-400 via-cyan-300 to-violet-400 bg-clip-text text-transparent">
+              VoteVibe
+            </span>
+          </span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24"
+               class="absolute right-4 cursor-pointer p-0">
+            <g fill="none" stroke="#fff" stroke-dasharray="16" stroke-dashoffset="16" 
+               stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+              <path d="M7 7l10 10"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.4s" values="16;0"/></path>
+              <path d="M17 7l-10 10"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.4s" dur="0.4s" values="16;0"/></path>
+            </g>
+          </svg>
+        </li>
+        
+        <!-- ✅ ДИНАМИЧЕСКИЕ ПУНКТЫ МЕНЮ -->
+        <li class="w-1/2 mx-auto" *ngFor="let item of menuItems">
+          <a
+            [routerLink]="[item.route]"
+            (click)="closeMenu()"
+            class="btn btn-ghost accent-hover rounded-[30px] text-lg"
+            routerLinkActive="router-link-active">
+            {{ item.label }}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+              <path fill="#fff" d="M12.6 12L8 7.4L9.4 6l6 6l-6 6L8 16.6z"/>
+            </svg>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</header>

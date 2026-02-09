@@ -1,0 +1,26 @@
+  <app-banner
+    [quizCount]="quizCount"
+    [page]="banner"
+  ></app-banner>
+  
+<section class="container flex flex-col-reverse justify-center items-center">
+  <div class="max-w-screen-xl p-8 mx-auto bg-shadow mt-[50px] md:mt-[60px] mb-[40px] text-pretty w-full">
+    <h2 class="md:text-center text-pretty mb-2 text-lg md:text-2xl font-extrabold md:leading-9 text-white-50 text-center">
+      {{ page?.content?.['privacy']?.title || 'Privacy Policy' }}
+    </h2>
+    <p class="md:text-center text-center mb-10 text-md md:text-xl font-extrabold md:leading-6 opacity-70 text-balance">
+      {{ page?.content?.['privacy']?.subtitle || "Here you can manage the website's cookies and non-essential data processing. Essential items are always enabled to ensure the site operates securely." }}
+    </p>
+
+    <ul class="grid grid-cols-1 md:grid-cols-2 items-center gap-6 md:gap-8">
+      <li class="w-full" *ngFor="let item of page?.content?.['privacy']?.faq">
+        <p class="text-lg font-medium leading-6 text-white-50">
+          {{ item.question }}
+        </p>
+        <div class="mt-2">
+          <p class="text-base leading-6 text-gray-500" [innerHTML]="item.answer"></p>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
