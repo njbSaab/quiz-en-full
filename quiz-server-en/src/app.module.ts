@@ -8,6 +8,7 @@ import { ApiModule } from './api/api.module';
 import { EmailModule } from './email/email.module';
 import { EditContent } from './edit-content/edit-content.module';
 import { LoggerModule } from './common/logger/logger.module';
+import { CacheModule } from './common/chache/cache.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TransformInterceptor } from './common/interceptors/transform/transform-interceptor.interceptor';
 import {LoggingInterceptor} from './common/interceptors/logging/logging.interceptor';
@@ -16,7 +17,8 @@ import { EditEmailTemplateModule } from './edit-email-template/edit-email-templa
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    ScheduleModule.forRoot(), 
+    ScheduleModule.forRoot(),
+    CacheModule,
     QuizzesModule,
     UsersModule,
     QuizResultsModule,
@@ -24,7 +26,7 @@ import { EditEmailTemplateModule } from './edit-email-template/edit-email-templa
     EmailModule,
     EditContent,
     LoggerModule,
-    EditEmailTemplateModule  
+    EditEmailTemplateModule
   ],
   providers: [
     {

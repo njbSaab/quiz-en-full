@@ -6,6 +6,7 @@ import { CacheInterceptor } from '../common/interceptors/cache/cache.interceptor
 import { EditContentQueryService } from './edit-content.query.service';
 import { EditContentCommandService } from './edit-content.command.service';
 import { EditContentMapper } from './mappers/edit-content.mapper';
+import { CacheService } from '../common/chache/cache.service';
 
 @Module({
   controllers: [EditContentController],

@@ -7,6 +7,7 @@ import { QuizzesQueryService } from './quizzes.query.service';
 import { CacheInterceptor } from 'src/common/interceptors/cache/cache.interceptor';
 import { QuizMapper } from './mappers/quiz.mapper';
 import { QuizzesCommandService } from './quizzes.command.service';
+import { CacheService } from '../common/chache/cache.service';
 
 @Module({
   imports: [EmailModule], 

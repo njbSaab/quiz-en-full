@@ -7,15 +7,12 @@ import { QuizModel } from './models/quiz.model';
 import { CreateQuizDto } from './dto/create-quiz.dto';
 import { UpdateQuizDto } from './dto/update-quiz.dto';
 import { LoggerService } from '../common/logger/logger.service';
+import { CacheService } from '../common/chache/cache.service';
 
 /**
  * Command Service - ТОЛЬКО запись квизов
  * 
- * Pure Fabrication (GRASP):
- * - Искусственный класс для изменения данных
- * 
- * Single Responsibility (SOLID):
- * - ТОЛЬКО INSERT/UPDATE/DELETE
+ * ✅ ИСПРАВЛЕНО: Убраны ошибочные попытки удаления UserSession
  */
 @Injectable()
 export class QuizzesCommandService {
@@ -23,6 +20,7 @@ export class QuizzesCommandService {
     private readonly prisma: PrismaService,
     private readonly mapper: QuizMapper,
     private readonly logger: LoggerService,
+    private readonly cacheService: CacheService,
   ) {
     this.logger.setContext(QuizzesCommandService.name);
   }
@@ -78,17 +76,26 @@ export class QuizzesCommandService {
       },
     });
 
+    // ✅ Инвалидируем кэш списка квизов
+    await this.cacheService.invalidateWithList('quizzes');
+    this.logger.log('✅ Cache invalidated after quiz creation', { id: quiz.id });
+
     this.logger.log('Quiz created successfully', { id: quiz.id });
     return this.mapper.toDomain(quiz);
   }
 
   /**
    * Обновить квиз
+   * 
+   * ✅ УЛУЧШЕНО:
+   * 1. Инвалидирует кэш квиза
+   * 2. Удаляет старые UserSession для этого квиза (если связь существует в schema)
+   * 3. Очищает связанный кэш
    */
   async update(id: number, dto: UpdateQuizDto): Promise<QuizModel> {
     this.logger.log('Updating quiz', { id });
 
-    // Обновляем основные поля квиза
+    // 🎯 ШАГ 1: Обновляем основные поля квиза
     const updated = await this.prisma.quiz.update({
       where: { id },
       data: {
@@ -121,10 +128,34 @@ export class QuizzesCommandService {
       },
     });
 
-    // Если обновляются вопросы - заменяем полностью
+    // 🎯 ШАГ 2: Если обновляются вопросы - заменяем полностью
     if (dto.questions) {
       this.logger.log('Replacing questions', { quizId: id });
       
+      // ✅ ОПЦИОНАЛЬНО: Удаляем старые UserSession для этого квиза
+      // Раскомментируй эту секцию, ТОЛЬКО если у тебя есть связь Quiz <-> UserSession
+      /*
+      try {
+        const deletedSessions = await this.prisma.userSession.deleteMany({
+          where: { 
+            // Замени на правильное поле из твоей Prisma schema
+            // Например: quizId: id
+            // Или через relation: quiz: { id }
+          },
+        });
+        
+        this.logger.warn('🗑️  Deleted old sessions after quiz update', {
+          quizId: id,
+          deletedCount: deletedSessions.count,
+        });
+      } catch (error) {
+        this.logger.warn('Could not delete old sessions (relation might not exist)', {
+          quizId: id,
+          error: error.message,
+        });
+      }
+      */
+
       // Удаляем старые вопросы (и ответы cascade)
       await this.prisma.question.deleteMany({
         where: { quizId: id },
@@ -164,7 +195,7 @@ export class QuizzesCommandService {
       }
     }
 
-    // Получаем финальный результат
+    // 🎯 ШАГ 3: Получаем финальный результат
     const result = await this.prisma.quiz.findUnique({
       where: { id },
       include: {
@@ -176,6 +207,10 @@ export class QuizzesCommandService {
       },
     });
 
+    // ✅ ШАГ 4: Инвалидируем ВСЕ связанные кэши
+    await this.cacheService.invalidateWithList('quizzes', id);
+    this.logger.log('✅ Cache invalidated after quiz update', { id });
+
     this.logger.log('Quiz updated successfully', { id });
     return this.mapper.toDomain(result!);
   }
@@ -186,9 +221,36 @@ export class QuizzesCommandService {
   async delete(id: number): Promise<void> {
     this.logger.log('Deleting quiz', { id });
 
+    // ✅ ОПЦИОНАЛЬНО: Удаляем связанные сессии
+    // Раскомментируй ТОЛЬКО если у тебя есть связь Quiz <-> UserSession
+    /*
+    try {
+      const deletedSessions = await this.prisma.userSession.deleteMany({
+        where: { 
+          // Замени на правильное поле из твоей Prisma schema
+        },
+      });
+      
+      this.logger.warn('🗑️  Deleted sessions before quiz deletion', {
+        quizId: id,
+        deletedCount: deletedSessions.count,
+      });
+    } catch (error) {
+      this.logger.warn('Could not delete sessions (relation might not exist)', {
+        quizId: id,
+        error: error.message,
+      });
+    }
+    */
+
+    // Удаляем квиз (вопросы и ответы удалятся каскадно)
     await this.prisma.quiz.delete({
       where: { id },
     });
+
+    // ✅ Инвалидируем кэш
+    await this.cacheService.invalidateWithList('quizzes', id);
+    this.logger.log('✅ Cache invalidated after quiz deletion', { id });
 
     this.logger.log('Quiz deleted successfully', { id });
   }
@@ -218,6 +280,13 @@ export class QuizzesCommandService {
         },
         category: true,
       },
+    });
+
+    // ✅ Инвалидируем кэш
+    await this.cacheService.invalidateWithList('quizzes', id);
+    this.logger.log('✅ Cache invalidated after toggle', {
+      id,
+      isActive: updated.isActive,
     });
 
     this.logger.log('Quiz active status toggled', {

@@ -7,6 +7,7 @@ import { EditContentMapper } from './mappers/edit-content.mapper';
 import { ContentResponseDto } from './dto/content-response.dto';
 import { UpdateContentDto } from './dto/update-content.dto';
 import { CacheInterceptor } from '../common/interceptors/cache/cache.interceptor';
+import { CacheService } from '../common/chache/cache.service';
 import { LoggerService } from '../common/logger/logger.service';
 
 /**
@@ -21,6 +22,7 @@ export class EditContentService {
     private readonly commandService: EditContentCommandService,
     private readonly mapper: EditContentMapper,
     private readonly cacheInterceptor: CacheInterceptor,
+    private readonly cacheService: CacheService,
     private readonly logger: LoggerService,
   ) {
     this.logger.setContext(EditContentService.name);
@@ -127,7 +129,7 @@ export class EditContentService {
       try {
         existing.updateTitle(dto.title);
       } catch (error) {
-        this.logger.error('Invalid title', error.stack, { id, title: dto.title });
+        this.logger.error('Invalid title', error instanceof Error ? error.stack : String(error), { id, title: dto.title });
         throw error;
       }
     }
@@ -139,11 +141,11 @@ export class EditContentService {
     const updated = await this.commandService.save(existing);
 
     // ✅ Инвалидируем И список, И конкретную страницу
-    await this.cacheInterceptor.invalidateWithList('pages', id);
+    await this.cacheService.invalidateWithList('pages', id);
     
     // Также инвалидируем по slug (если slug может быть в URL)
     if (existing.slug) {
-      await this.cacheInterceptor.invalidate(`pages/${existing.slug}`);
+      await this.cacheService.invalidate(`pages/${existing.slug}`);
     }
     
     this.logger.log('Cache invalidated after content update', { 
@@ -168,18 +170,18 @@ export class EditContentService {
 
     try {
       model.publish();
-    } catch (error) {
-      this.logger.error('Cannot publish content', error.stack, { id });
+    } catch (error: unknown) {
+      this.logger.error('Cannot publish content', error instanceof Error ? error.stack : String(error), { id });
       throw error;
     }
 
     const published = await this.commandService.save(model);
 
     // ✅ Инвалидируем И список, И конкретную страницу
-    await this.cacheInterceptor.invalidateWithList('pages', id);
+    await this.cacheService.invalidateWithList('pages', id);
     
     if (model.slug) {
-      await this.cacheInterceptor.invalidate(`pages/${model.slug}`);
+      await this.cacheService.invalidate(`pages/${model.slug}`);
     }
     
     this.logger.log('Content published and cache invalidated', { id });
@@ -204,10 +206,10 @@ export class EditContentService {
     const unpublished = await this.commandService.save(model);
 
     // ✅ Инвалидируем И список, И конкретную страницу
-    await this.cacheInterceptor.invalidateWithList('pages', id);
+    await this.cacheService.invalidateWithList('pages', id);
     
     if (model.slug) {
-      await this.cacheInterceptor.invalidate(`pages/${model.slug}`);
+      await this.cacheService.invalidate(`pages/${model.slug}`);
     }
     
     this.logger.log('Content unpublished and cache invalidated', { id });
@@ -224,7 +226,7 @@ export class EditContentService {
    */
   async getCacheStats() {
     this.logger.log('Getting cache stats');
-    return this.cacheInterceptor.getStats();
+    return this.cacheService.getStats();
   }
 
   /**
@@ -232,6 +234,6 @@ export class EditContentService {
    */
   async clearCache(): Promise<void> {
     this.logger.warn('Manually clearing all cache');
-    await this.cacheInterceptor.clear();
+    await this.cacheService.clear();
   }
 }

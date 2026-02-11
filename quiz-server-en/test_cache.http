@@ -1,0 +1,14 @@
+GET http://localhost:3403/api/quizzes
+Accept: application/json
+
+###
+
+GET http://localhost:3403/api/quizzes/cache/stats
+Accept: application/json
+
+###
+
+GET http://localhost:3403/api/pages
+Accept: application/json
+
+###

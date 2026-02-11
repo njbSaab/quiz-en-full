@@ -8,6 +8,7 @@ import { CreateQuizDto } from './dto/create-quiz.dto';
 import { UpdateQuizDto } from './dto/update-quiz.dto';
 import { QuizResponseDto } from './dto/quiz-response.dto';
 import { CacheInterceptor } from '../common/interceptors/cache/cache.interceptor';
+import { CacheService } from '../common/chache/cache.service';
 import { LoggerService } from '../common/logger/logger.service';
 
 /**
@@ -20,6 +21,7 @@ export class QuizzesService {
     private readonly commandService: QuizzesCommandService,
     private readonly mapper: QuizMapper,
     private readonly cacheInterceptor: CacheInterceptor,
+    private readonly cacheService: CacheService,
     private readonly logger: LoggerService,
   ) {
     this.logger.setContext(QuizzesService.name);
@@ -118,7 +120,7 @@ export class QuizzesService {
     const model = await this.commandService.create(dto);
 
     // ✅ Инвалидируем кэш списка квизов
-    await this.cacheInterceptor.invalidate('quizzes');
+    await this.cacheService.invalidate('quizzes');
     this.logger.log('Cache invalidated after quiz creation', { id: model.id });
 
     return this.mapper.toResponse(model);
@@ -138,7 +140,7 @@ export class QuizzesService {
     const model = await this.commandService.update(id, dto);
 
     // ✅ Инвалидируем И список, И конкретный квиз
-    await this.cacheInterceptor.invalidateWithList('quizzes', id);
+    await this.cacheService.invalidateWithList('quizzes', id);
     this.logger.log('Cache invalidated after quiz update', { id });
 
     return this.mapper.toResponse(model);
@@ -158,7 +160,7 @@ export class QuizzesService {
     await this.commandService.delete(id);
 
     // ✅ Инвалидируем И список, И конкретный квиз
-    await this.cacheInterceptor.invalidateWithList('quizzes', id);
+    await this.cacheService.invalidateWithList('quizzes', id);
     this.logger.log('Cache invalidated after quiz deletion', { id });
 
     return { message: `Quiz with ID ${id} deleted successfully` };
@@ -177,15 +179,15 @@ export class QuizzesService {
 
     try {
       model.toggleActive();
-    } catch (error) {
-      this.logger.error('Cannot toggle quiz status', error.stack, { id });
+    } catch (error: unknown) {
+      this.logger.error('Cannot toggle quiz status', error instanceof Error ? error.stack : String(error), { id });
       throw error;
     }
 
     const updated = await this.commandService.toggleActive(id);
 
     // ✅ Инвалидируем И список, И конкретный квиз
-    await this.cacheInterceptor.invalidateWithList('quizzes', id);
+    await this.cacheService.invalidateWithList('quizzes', id);
     this.logger.log('Quiz active status toggled and cache invalidated', {
       id,
       isActive: updated.isActive,
@@ -217,7 +219,7 @@ export class QuizzesService {
    */
   async clearCache(): Promise<void> {
     this.logger.warn('Manually clearing quizzes cache');
-    await this.cacheInterceptor.invalidate('quizzes');
+    await this.cacheService.invalidate('quizzes');
   }
 
   /**
@@ -225,6 +227,6 @@ export class QuizzesService {
    */
   async getCacheStats() {
     this.logger.log('Getting cache stats');
-    return this.cacheInterceptor.getStats();
+    return this.cacheService.getStats();
   }
 }

@@ -56,11 +56,7 @@ app.enableCors({
 app.useStaticAssets(join(getPublicPath(), 'images'), {
   prefix: '/images/',
 });
-  app.setGlobalPrefix('api', { exclude: ['/'] });
-  app.enableShutdownHooks();
-  const port = process.env.PORT ?? 4001;
-  await app.listen(port);
-  // Swagger
+// Swagger
   const config = new DocumentBuilder()
     .setTitle('Quiz API')
     .setDescription('API for managing quizzes and user results')
@@ -73,6 +69,12 @@ app.useStaticAssets(join(getPublicPath(), 'images'), {
     swaggerOptions: { persistAuthorization: true },
     customSiteTitle: 'Quiz API Documentation',
   });
+  
+  app.setGlobalPrefix('api', { exclude: ['/'] });
+  app.enableShutdownHooks();
+  const port = process.env.PORT ?? 4001;
+  await app.listen(port);
+  
   logger.log(`Application is running on: http://localhost:${port}`);
   logger.log(`Static images available at: http://localhost:${port}/images/`);
 }
